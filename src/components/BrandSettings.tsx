@@ -85,9 +85,10 @@ export default function BrandSettings() {
                   {brand.logoDataUrl && (
                     <button
                       onClick={onClearLogo}
-                      className="px-3 py-1.5 border border-igc-line text-igc-muted hover:text-red-500 rounded-md text-xs"
+                      className="px-3 py-1.5 border border-igc-line text-igc-muted hover:text-igc-purple hover:border-igc-purple rounded-md text-xs"
+                      title="Clear uploaded logo and restore default"
                     >
-                      Remove
+                      Use IGC default
                     </button>
                   )}
                 </div>

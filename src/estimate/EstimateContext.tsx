@@ -66,7 +66,8 @@ function roundCents(n: number) {
   return Math.round(n * 100) / 100
 }
 
-const STORAGE_KEY = 'igc-estimator-v1'
+const STORAGE_KEY = 'igc-estimator-v2'
+const DEFAULT_LOGO_URL = `${import.meta.env.BASE_URL}igc-logo-black.png`
 
 const DEFAULT_CLIENT: ClientInfo = {
   projectName: '',
@@ -113,6 +114,29 @@ export function EstimateProvider({ children }: { children: ReactNode }) {
       // quota exceeded (e.g. huge logo), private mode — fail silently
     }
   }, [quotes, client, brand])
+
+  // Load bundled IGC logo as default when user has no logo set
+  useEffect(() => {
+    if (brand.logoDataUrl) return
+    let cancelled = false
+    ;(async () => {
+      try {
+        const res = await fetch(DEFAULT_LOGO_URL)
+        const blob = await res.blob()
+        const reader = new FileReader()
+        reader.onload = () => {
+          if (cancelled) return
+          setBrandState((b) => (b.logoDataUrl ? b : { ...b, logoDataUrl: reader.result as string }))
+        }
+        reader.readAsDataURL(blob)
+      } catch {
+        // offline or bundled asset missing — PDF will render without logo
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [brand.logoDataUrl])
 
   function addQuote(q: Omit<SavedQuote, 'id' | 'createdAt'>) {
     setQuotes((qs) => [...qs, { ...q, total: roundCents(q.total), id: uid(), createdAt: Date.now() }])
