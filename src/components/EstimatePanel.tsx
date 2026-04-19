@@ -1,6 +1,7 @@
 import { useEstimate, TradeKind } from '../estimate/EstimateContext'
 import { generatePdf } from '../estimate/generatePdf'
 import PdfPreview from './PdfPreview'
+import BrandSettings from './BrandSettings'
 
 const TRADE_LABELS: Record<TradeKind, string> = {
   film: 'Window Film',
@@ -19,16 +20,18 @@ function fmtCurrency(n: number) {
 }
 
 export default function EstimatePanel() {
-  const { quotes, client, setClient, removeQuote, clearQuotes, grandTotal } = useEstimate()
+  const { quotes, client, brand, setClient, removeQuote, clearQuotes, grandTotal } = useEstimate()
 
   function onSavePdf() {
-    generatePdf(quotes, client, grandTotal)
+    generatePdf(quotes, client, grandTotal, brand)
   }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-6">
       {/* LEFT — editable controls */}
       <div className="space-y-6 min-w-0">
+        <BrandSettings />
+
         <section className="bg-white border border-igc-line rounded-lg p-6">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted mb-4">Project info</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

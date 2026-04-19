@@ -1,6 +1,6 @@
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
-import type { SavedQuote, ClientInfo, TradeKind } from './EstimateContext'
+import type { SavedQuote, ClientInfo, BrandInfo, TradeKind } from './EstimateContext'
 
 const TRADE_LABELS: Record<TradeKind, string> = {
   film: 'WINDOW FILM',
@@ -28,7 +28,12 @@ function safeFilename(s: string) {
   return s.replace(/[^a-zA-Z0-9._-]+/g, '-').replace(/^-+|-+$/g, '') || 'estimate'
 }
 
-export function buildPdfDoc(quotes: SavedQuote[], client: ClientInfo, grandTotal: number) {
+export function buildPdfDoc(
+  quotes: SavedQuote[],
+  client: ClientInfo,
+  grandTotal: number,
+  brand: BrandInfo,
+) {
   const doc = new jsPDF({ unit: 'pt', format: 'letter' })
   const pageWidth = doc.internal.pageSize.getWidth()
   const pageHeight = doc.internal.pageSize.getHeight()
@@ -36,16 +41,34 @@ export function buildPdfDoc(quotes: SavedQuote[], client: ClientInfo, grandTotal
   const contentWidth = pageWidth - margin * 2
 
   // ───────── LETTERHEAD ─────────
-  doc.setFont('helvetica', 'bold')
-  doc.setFontSize(20)
-  doc.setTextColor(...INK)
-  doc.text('IGC Studio', margin, margin + 8)
+  let textX = margin
+
+  if (brand.logoDataUrl) {
+    try {
+      const props = doc.getImageProperties(brand.logoDataUrl)
+      const targetW = Math.max(24, Math.min(180, brand.logoWidthPt || 72))
+      const scale = targetW / props.width
+      const targetH = props.height * scale
+      const format = (props.fileType || 'PNG').toUpperCase()
+      doc.addImage(brand.logoDataUrl, format, margin, margin - 4, targetW, Math.min(56, targetH))
+      textX = margin + targetW + 14
+    } catch {
+      // bad image data — fall through to text-only letterhead
+    }
+  }
+
+  if (brand.companyName) {
+    doc.setFont('helvetica', 'bold')
+    doc.setFontSize(20)
+    doc.setTextColor(...INK)
+    doc.text(brand.companyName, textX, margin + 8)
+  }
 
   doc.setFont('helvetica', 'normal')
   doc.setFontSize(9)
   doc.setTextColor(...MUTED)
-  doc.text('Interior Design · Window Film · Wallcovering · Murals', margin, margin + 24)
-  doc.text('igcstudio.com', margin, margin + 36)
+  if (brand.tagline) doc.text(brand.tagline, textX, margin + 24)
+  if (brand.website) doc.text(brand.website, textX, margin + 36)
 
   // Right-aligned estimate meta
   doc.setFont('helvetica', 'bold')
@@ -252,12 +275,22 @@ export function pdfFilename(client: ClientInfo) {
     .join('-') + '.pdf'
 }
 
-export function generatePdf(quotes: SavedQuote[], client: ClientInfo, grandTotal: number) {
-  const doc = buildPdfDoc(quotes, client, grandTotal)
+export function generatePdf(
+  quotes: SavedQuote[],
+  client: ClientInfo,
+  grandTotal: number,
+  brand: BrandInfo,
+) {
+  const doc = buildPdfDoc(quotes, client, grandTotal, brand)
   doc.save(pdfFilename(client))
 }
 
-export function generatePdfBlobUrl(quotes: SavedQuote[], client: ClientInfo, grandTotal: number) {
-  const doc = buildPdfDoc(quotes, client, grandTotal)
+export function generatePdfBlobUrl(
+  quotes: SavedQuote[],
+  client: ClientInfo,
+  grandTotal: number,
+  brand: BrandInfo,
+) {
+  const doc = buildPdfDoc(quotes, client, grandTotal, brand)
   return doc.output('bloburl') as unknown as string
 }

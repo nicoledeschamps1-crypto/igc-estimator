@@ -27,13 +27,24 @@ export type ClientInfo = {
   notes: string
 }
 
+export type BrandInfo = {
+  companyName: string
+  tagline: string
+  website: string
+  logoDataUrl: string | null
+  logoWidthPt: number
+}
+
 type Ctx = {
   quotes: SavedQuote[]
   client: ClientInfo
+  brand: BrandInfo
   addQuote: (q: Omit<SavedQuote, 'id' | 'createdAt'>) => void
   removeQuote: (id: string) => void
   clearQuotes: () => void
   setClient: (patch: Partial<ClientInfo>) => void
+  setBrand: (patch: Partial<BrandInfo>) => void
+  resetBrand: () => void
   grandTotal: number
 }
 
@@ -66,17 +77,26 @@ const DEFAULT_CLIENT: ClientInfo = {
   notes: '',
 }
 
-function loadState(): { quotes: SavedQuote[]; client: ClientInfo } {
+const DEFAULT_BRAND: BrandInfo = {
+  companyName: 'IGC Studio',
+  tagline: 'Interior Design · Window Film · Wallcovering · Murals',
+  website: 'igcstudio.com',
+  logoDataUrl: null,
+  logoWidthPt: 72,
+}
+
+function loadState(): { quotes: SavedQuote[]; client: ClientInfo; brand: BrandInfo } {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return { quotes: [], client: DEFAULT_CLIENT }
+    if (!raw) return { quotes: [], client: DEFAULT_CLIENT, brand: DEFAULT_BRAND }
     const parsed = JSON.parse(raw)
     return {
       quotes: Array.isArray(parsed.quotes) ? parsed.quotes : [],
       client: parsed.client && typeof parsed.client === 'object' ? { ...DEFAULT_CLIENT, ...parsed.client } : DEFAULT_CLIENT,
+      brand: parsed.brand && typeof parsed.brand === 'object' ? { ...DEFAULT_BRAND, ...parsed.brand } : DEFAULT_BRAND,
     }
   } catch {
-    return { quotes: [], client: DEFAULT_CLIENT }
+    return { quotes: [], client: DEFAULT_CLIENT, brand: DEFAULT_BRAND }
   }
 }
 
@@ -84,14 +104,15 @@ export function EstimateProvider({ children }: { children: ReactNode }) {
   const initial = loadState()
   const [quotes, setQuotes] = useState<SavedQuote[]>(initial.quotes)
   const [client, setClientState] = useState<ClientInfo>(initial.client)
+  const [brand, setBrandState] = useState<BrandInfo>(initial.brand)
 
   useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ quotes, client }))
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ quotes, client, brand }))
     } catch {
-      // quota exceeded, private mode, etc — fail silently
+      // quota exceeded (e.g. huge logo), private mode — fail silently
     }
-  }, [quotes, client])
+  }, [quotes, client, brand])
 
   function addQuote(q: Omit<SavedQuote, 'id' | 'createdAt'>) {
     setQuotes((qs) => [...qs, { ...q, total: roundCents(q.total), id: uid(), createdAt: Date.now() }])
@@ -105,12 +126,29 @@ export function EstimateProvider({ children }: { children: ReactNode }) {
   function setClient(patch: Partial<ClientInfo>) {
     setClientState((c) => ({ ...c, ...patch }))
   }
+  function setBrand(patch: Partial<BrandInfo>) {
+    setBrandState((b) => ({ ...b, ...patch }))
+  }
+  function resetBrand() {
+    setBrandState(DEFAULT_BRAND)
+  }
 
   const grandTotal = quotes.reduce((s, q) => s + q.total, 0)
 
   return (
     <EstimateCtx.Provider
-      value={{ quotes, client, addQuote, removeQuote, clearQuotes, setClient, grandTotal }}
+      value={{
+        quotes,
+        client,
+        brand,
+        addQuote,
+        removeQuote,
+        clearQuotes,
+        setClient,
+        setBrand,
+        resetBrand,
+        grandTotal,
+      }}
     >
       {children}
     </EstimateCtx.Provider>

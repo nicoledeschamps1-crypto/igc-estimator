@@ -5,7 +5,7 @@ import { generatePdfBlobUrl } from '../estimate/generatePdf'
 const DEBOUNCE_MS = 200
 
 export default function PdfPreview() {
-  const { quotes, client, grandTotal } = useEstimate()
+  const { quotes, client, brand, grandTotal } = useEstimate()
   const [blobUrl, setBlobUrl] = useState<string | null>(null)
   const [stale, setStale] = useState(false)
   const prevUrlRef = useRef<string | null>(null)
@@ -13,7 +13,7 @@ export default function PdfPreview() {
   useEffect(() => {
     setStale(true)
     const timer = setTimeout(() => {
-      const url = generatePdfBlobUrl(quotes, client, grandTotal)
+      const url = generatePdfBlobUrl(quotes, client, grandTotal, brand)
       if (prevUrlRef.current) URL.revokeObjectURL(prevUrlRef.current)
       prevUrlRef.current = url
       setBlobUrl(url)
@@ -21,7 +21,7 @@ export default function PdfPreview() {
     }, DEBOUNCE_MS)
 
     return () => clearTimeout(timer)
-  }, [quotes, client, grandTotal])
+  }, [quotes, client, brand, grandTotal])
 
   useEffect(() => {
     return () => {
