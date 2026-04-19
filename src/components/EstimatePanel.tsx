@@ -1,4 +1,5 @@
 import { useEstimate, TradeKind } from '../estimate/EstimateContext'
+import { generatePdf } from '../estimate/generatePdf'
 
 const TRADE_LABELS: Record<TradeKind, string> = {
   film: 'Window Film',
@@ -19,8 +20,8 @@ function fmtCurrency(n: number) {
 export default function EstimatePanel() {
   const { quotes, client, setClient, removeQuote, clearQuotes, grandTotal } = useEstimate()
 
-  function onPrint() {
-    window.print()
+  function onSavePdf() {
+    generatePdf(quotes, client, grandTotal)
   }
 
   return (
@@ -227,11 +228,11 @@ export default function EstimatePanel() {
             </button>
           )}
           <button
-            onClick={onPrint}
+            onClick={onSavePdf}
             disabled={quotes.length === 0}
             className="px-5 py-2 bg-igc-purple hover:bg-igc-purple-dark text-white rounded-md text-sm font-medium transition-colors disabled:bg-igc-line disabled:text-igc-muted disabled:cursor-not-allowed"
           >
-            Print / Save PDF
+            Download PDF
           </button>
         </div>
       </section>
