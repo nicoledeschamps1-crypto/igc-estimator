@@ -57,7 +57,7 @@ export default function WallcoveringCalculator() {
   const [extraWastePct, setExtraWastePct] = useState<number>(5)
   const [laborPerSqFt, setLaborPerSqFt] = useState<number>(5.5)
   const [markupPct, setMarkupPct] = useState<number>(35)
-  const [taxPct, setTaxPct] = useState<number>(8.875)
+  const [taxPct, setTaxPct] = useState<number>(7)
   const [prep, setPrep] = useState<PrepItem[]>(DEFAULT_PREP_ITEMS.map((p) => ({ ...p, id: uid() })))
   const [clientSuppliesMaterial, setClientSuppliesMaterial] = useState<boolean>(false)
 

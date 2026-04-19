@@ -60,7 +60,7 @@ export default function FilmCalculator() {
   const [wastePct, setWastePct] = useState<number>(10)
   const [laborPerSqFt, setLaborPerSqFt] = useState<number>(5.0)
   const [markupPct, setMarkupPct] = useState<number>(35)
-  const [taxPct, setTaxPct] = useState<number>(8.875)
+  const [taxPct, setTaxPct] = useState<number>(7)
   const [flags, setFlags] = useState<ComplexityFlags>({
     archedGlass: false,
     above10ft: false,

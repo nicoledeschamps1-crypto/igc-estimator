@@ -52,7 +52,7 @@ export default function MuralCalculator() {
   const [access, setAccess] = useState<AccessKey>('ladder')
   const [designFee, setDesignFee] = useState<number>(1500)
   const [markupPct, setMarkupPct] = useState<number>(35)
-  const [taxPct, setTaxPct] = useState<number>(8.875)
+  const [taxPct, setTaxPct] = useState<number>(7)
   const [projectType, setProjectType] = useState<ProjectType>('residential')
 
   const style = DEFAULT_STYLES.find((s) => s.id === styleId)!

@@ -28,7 +28,7 @@ function safeFilename(s: string) {
   return s.replace(/[^a-zA-Z0-9._-]+/g, '-').replace(/^-+|-+$/g, '') || 'estimate'
 }
 
-export function generatePdf(quotes: SavedQuote[], client: ClientInfo, grandTotal: number) {
+export function buildPdfDoc(quotes: SavedQuote[], client: ClientInfo, grandTotal: number) {
   const doc = new jsPDF({ unit: 'pt', format: 'letter' })
   const pageWidth = doc.internal.pageSize.getWidth()
   const pageHeight = doc.internal.pageSize.getHeight()
@@ -239,13 +239,25 @@ export function generatePdf(quotes: SavedQuote[], client: ClientInfo, grandTotal
     doc.text(`Page ${i} / ${totalPages}`, pageWidth - margin, footerY, { align: 'right' })
   }
 
-  const filename = [
+  return doc
+}
+
+export function pdfFilename(client: ClientInfo) {
+  return [
     'IGC-Estimate',
     client.estimateNumber || client.dateIso,
     client.clientName ? safeFilename(client.clientName) : null,
   ]
     .filter(Boolean)
     .join('-') + '.pdf'
+}
 
-  doc.save(filename)
+export function generatePdf(quotes: SavedQuote[], client: ClientInfo, grandTotal: number) {
+  const doc = buildPdfDoc(quotes, client, grandTotal)
+  doc.save(pdfFilename(client))
+}
+
+export function generatePdfBlobUrl(quotes: SavedQuote[], client: ClientInfo, grandTotal: number) {
+  const doc = buildPdfDoc(quotes, client, grandTotal)
+  return doc.output('bloburl') as unknown as string
 }

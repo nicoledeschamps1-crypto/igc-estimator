@@ -28,8 +28,8 @@ function AppShell() {
 
   return (
     <div className="min-h-screen">
-      <header className="border-b border-igc-line bg-white print:hidden">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <header className="border-b border-igc-line bg-white">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-md bg-igc-purple flex items-center justify-center text-white font-bold text-sm">
               IGC
@@ -42,7 +42,7 @@ function AppShell() {
           <div className="text-xs text-igc-muted">v0.3 · prototype</div>
         </div>
 
-        <nav className="max-w-6xl mx-auto px-6">
+        <nav className="max-w-7xl mx-auto px-6">
           <div className="flex gap-1 -mb-px">
             {TABS.map((t) => {
               const isActive = t.id === tab
@@ -65,7 +65,7 @@ function AppShell() {
         </nav>
       </header>
 
-      <main className="max-w-6xl mx-auto px-6 py-8">
+      <main className="max-w-7xl mx-auto px-6 py-8">
         <div hidden={tab !== 'film'}>
           <FilmCalculator />
         </div>
@@ -75,12 +75,12 @@ function AppShell() {
         <div hidden={tab !== 'mural'}>
           <MuralCalculator />
         </div>
-        <div hidden={tab !== 'estimate'} className={tab === 'estimate' ? 'print:block' : ''}>
+        <div hidden={tab !== 'estimate'}>
           <EstimatePanel />
         </div>
       </main>
 
-      <footer className="max-w-6xl mx-auto px-6 py-8 text-xs text-igc-muted print:hidden">
+      <footer className="max-w-7xl mx-auto px-6 py-8 text-xs text-igc-muted">
         <p>
           Prototype — rates and waste factors are editable defaults, not final pricing. Replace with your catalog once
           dad reviews.
