@@ -7,3 +7,35 @@ body {
   color: #1A1A1A;
   -webkit-font-smoothing: antialiased;
 }
+
+@media print {
+  @page {
+    margin: 0.6in;
+  }
+
+  body {
+    background: white;
+  }
+
+  main {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+
+  /* Hide tabs that aren't the estimate when printing.
+     When print is triggered, the estimate tab should be active. */
+  [hidden] {
+    display: none !important;
+  }
+
+  /* Remove card chrome on print */
+  .estimate-print-root section {
+    box-shadow: none !important;
+  }
+
+  /* Let each quote card break nicely */
+  .estimate-print-root .border {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}

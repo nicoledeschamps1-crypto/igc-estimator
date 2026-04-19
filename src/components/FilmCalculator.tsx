@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useEstimate } from '../estimate/EstimateContext'
 
 type Window = {
   id: string
@@ -51,6 +52,7 @@ function fmtNum(n: number, digits = 1) {
 }
 
 export default function FilmCalculator() {
+  const { addQuote } = useEstimate()
   const [windows, setWindows] = useState<Window[]>([
     { id: uid(), label: 'Conference room', qty: 12, widthIn: 48, heightIn: 60 },
   ])
@@ -340,11 +342,30 @@ export default function FilmCalculator() {
                 <span className="text-2xl font-semibold text-igc-ink">{fmtCurrency(calc.total)}</span>
               </div>
             </div>
-          </section>
 
-          <div className="text-xs text-igc-muted px-2">
-            Coming next: wallcovering calc, mural calc, estimate builder, PDF export.
-          </div>
+            <button
+              onClick={() => {
+                const label = windows.map((w) => w.label).filter(Boolean).join(', ') || 'Window film'
+                addQuote({
+                  trade: 'film',
+                  title: label,
+                  summary: `${fmtNum(calc.totalSqFt)} sq ft · ${film.name}`,
+                  total: calc.total,
+                  lineItems: [
+                    { label: 'Glass area', value: `${fmtNum(calc.totalSqFt)} sq ft`, muted: true },
+                    { label: 'Film', value: film.name, muted: true },
+                    { label: 'Material', value: fmtCurrency(calc.materialCost) },
+                    { label: 'Labor', value: fmtCurrency(calc.laborCost) },
+                    { label: `Markup (${markupPct}%)`, value: fmtCurrency(calc.markup), muted: true },
+                    { label: `Tax (${taxPct}%)`, value: fmtCurrency(calc.tax), muted: true },
+                  ],
+                })
+              }}
+              className="mt-4 w-full px-4 py-2.5 bg-igc-purple hover:bg-igc-purple-dark text-white rounded-md text-sm font-medium transition-colors"
+            >
+              + Add to estimate
+            </button>
+          </section>
         </div>
       </aside>
     </div>
