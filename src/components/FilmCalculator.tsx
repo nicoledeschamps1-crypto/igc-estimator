@@ -1,0 +1,373 @@
+import { useMemo, useState } from 'react'
+
+type Window = {
+  id: string
+  label: string
+  qty: number
+  widthIn: number
+  heightIn: number
+}
+
+type FilmOption = {
+  id: string
+  name: string
+  rollWidthIn: number
+  costPerSqFt: number
+}
+
+type ComplexityFlags = {
+  archedGlass: boolean
+  above10ft: boolean
+  exterior: boolean
+  hardWaterPrep: boolean
+  oldFilmRemoval: boolean
+}
+
+const DEFAULT_FILMS: FilmOption[] = [
+  { id: 'privacy-frost', name: 'Privacy Frost', rollWidthIn: 60, costPerSqFt: 4.5 },
+  { id: 'solar-ceramic', name: 'Solar Ceramic', rollWidthIn: 48, costPerSqFt: 7.25 },
+  { id: 'security-8mil', name: 'Security 8mil', rollWidthIn: 60, costPerSqFt: 9.0 },
+  { id: 'decorative-custom', name: 'Decorative / Custom Print', rollWidthIn: 54, costPerSqFt: 12.0 },
+]
+
+const COMPLEXITY_MULTIPLIERS = {
+  archedGlass: { labor: 1.4, label: 'Arched / curved glass (+40% labor)' },
+  above10ft: { labor: 1.2, label: 'Above 10ft (ladder / +20% labor)' },
+  exterior: { labor: 1.2, label: 'Exterior application (+20% labor)' },
+  hardWaterPrep: { labor: 1.15, label: 'Hard water prep (+15% labor)' },
+  oldFilmRemoval: { labor: 1.25, label: 'Old film removal (+25% labor)' },
+}
+
+function uid() {
+  return Math.random().toString(36).slice(2, 9)
+}
+
+function fmtCurrency(n: number) {
+  return n.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+}
+
+function fmtNum(n: number, digits = 1) {
+  return n.toLocaleString('en-US', { minimumFractionDigits: digits, maximumFractionDigits: digits })
+}
+
+export default function FilmCalculator() {
+  const [windows, setWindows] = useState<Window[]>([
+    { id: uid(), label: 'Conference room', qty: 12, widthIn: 48, heightIn: 60 },
+  ])
+  const [filmId, setFilmId] = useState<string>(DEFAULT_FILMS[0].id)
+  const [wastePct, setWastePct] = useState<number>(10)
+  const [laborPerSqFt, setLaborPerSqFt] = useState<number>(5.0)
+  const [markupPct, setMarkupPct] = useState<number>(35)
+  const [taxPct, setTaxPct] = useState<number>(8.875)
+  const [flags, setFlags] = useState<ComplexityFlags>({
+    archedGlass: false,
+    above10ft: false,
+    exterior: false,
+    hardWaterPrep: false,
+    oldFilmRemoval: false,
+  })
+
+  const film = DEFAULT_FILMS.find((f) => f.id === filmId)!
+
+  const calc = useMemo(() => {
+    const totalSqInches = windows.reduce((s, w) => s + w.qty * w.widthIn * w.heightIn, 0)
+    const totalSqFt = totalSqInches / 144
+    const wasteAdjustedSqFt = totalSqFt * (1 + wastePct / 100)
+
+    const widestWindowIn = windows.reduce((m, w) => Math.max(m, w.widthIn), 0)
+    const rollWidthAdequate = widestWindowIn <= film.rollWidthIn
+    const recommendedRollFt = wasteAdjustedSqFt * (12 / film.rollWidthIn)
+
+    const laborMultiplier = (Object.keys(flags) as Array<keyof ComplexityFlags>).reduce(
+      (m, k) => (flags[k] ? m * COMPLEXITY_MULTIPLIERS[k].labor : m),
+      1,
+    )
+
+    const materialCost = wasteAdjustedSqFt * film.costPerSqFt
+    const laborCost = totalSqFt * laborPerSqFt * laborMultiplier
+    const subtotal = materialCost + laborCost
+    const markup = subtotal * (markupPct / 100)
+    const preTax = subtotal + markup
+    const tax = preTax * (taxPct / 100)
+    const total = preTax + tax
+
+    return {
+      totalSqFt,
+      wasteAdjustedSqFt,
+      widestWindowIn,
+      rollWidthAdequate,
+      recommendedRollFt,
+      laborMultiplier,
+      materialCost,
+      laborCost,
+      subtotal,
+      markup,
+      preTax,
+      tax,
+      total,
+    }
+  }, [windows, film, wastePct, laborPerSqFt, markupPct, taxPct, flags])
+
+  function updateWindow(id: string, patch: Partial<Window>) {
+    setWindows((ws) => ws.map((w) => (w.id === id ? { ...w, ...patch } : w)))
+  }
+
+  function addWindow() {
+    setWindows((ws) => [...ws, { id: uid(), label: '', qty: 1, widthIn: 36, heightIn: 48 }])
+  }
+
+  function removeWindow(id: string) {
+    setWindows((ws) => ws.filter((w) => w.id !== id))
+  }
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8">
+      {/* LEFT — inputs */}
+      <div className="space-y-6">
+        <section className="bg-white border border-igc-line rounded-lg p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted">Windows</h2>
+            <button
+              onClick={addWindow}
+              className="text-sm text-igc-purple hover:text-igc-purple-dark font-medium"
+            >
+              + Add window group
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            <div className="grid grid-cols-[1fr_80px_90px_90px_40px] gap-2 text-xs font-medium text-igc-muted px-1">
+              <div>Label</div>
+              <div className="text-right">Qty</div>
+              <div className="text-right">Width (in)</div>
+              <div className="text-right">Height (in)</div>
+              <div></div>
+            </div>
+
+            {windows.map((w) => (
+              <div key={w.id} className="grid grid-cols-[1fr_80px_90px_90px_40px] gap-2 items-center">
+                <input
+                  type="text"
+                  placeholder="e.g. Conference rm"
+                  value={w.label}
+                  onChange={(e) => updateWindow(w.id, { label: e.target.value })}
+                  className="px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                />
+                <input
+                  type="number"
+                  min={1}
+                  value={w.qty}
+                  onChange={(e) => updateWindow(w.id, { qty: +e.target.value || 0 })}
+                  className="px-2 py-2 border border-igc-line rounded-md text-sm text-right focus:outline-none focus:border-igc-purple"
+                />
+                <input
+                  type="number"
+                  min={1}
+                  value={w.widthIn}
+                  onChange={(e) => updateWindow(w.id, { widthIn: +e.target.value || 0 })}
+                  className="px-2 py-2 border border-igc-line rounded-md text-sm text-right focus:outline-none focus:border-igc-purple"
+                />
+                <input
+                  type="number"
+                  min={1}
+                  value={w.heightIn}
+                  onChange={(e) => updateWindow(w.id, { heightIn: +e.target.value || 0 })}
+                  className="px-2 py-2 border border-igc-line rounded-md text-sm text-right focus:outline-none focus:border-igc-purple"
+                />
+                <button
+                  onClick={() => removeWindow(w.id)}
+                  className="text-igc-muted hover:text-red-500 text-lg"
+                  title="Remove"
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="bg-white border border-igc-line rounded-lg p-6">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted mb-4">Film & rates</h2>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-xs font-medium text-igc-ink mb-2">Film type</label>
+              <select
+                value={filmId}
+                onChange={(e) => setFilmId(e.target.value)}
+                className="w-full px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+              >
+                {DEFAULT_FILMS.map((f) => (
+                  <option key={f.id} value={f.id}>
+                    {f.name} — {f.rollWidthIn}" roll · ${f.costPerSqFt}/sf
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-medium text-igc-ink mb-2">Waste factor</label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="range"
+                    min={0}
+                    max={30}
+                    value={wastePct}
+                    onChange={(e) => setWastePct(+e.target.value)}
+                    className="flex-1 accent-igc-purple"
+                  />
+                  <span className="text-sm font-mono w-10 text-right">{wastePct}%</span>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-igc-ink mb-2">Labor per sq ft</label>
+                <div className="flex items-center gap-1">
+                  <span className="text-igc-muted text-sm">$</span>
+                  <input
+                    type="number"
+                    step={0.25}
+                    value={laborPerSqFt}
+                    onChange={(e) => setLaborPerSqFt(+e.target.value || 0)}
+                    className="flex-1 px-2 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-igc-ink mb-2">Markup</label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="range"
+                    min={0}
+                    max={100}
+                    value={markupPct}
+                    onChange={(e) => setMarkupPct(+e.target.value)}
+                    className="flex-1 accent-igc-purple"
+                  />
+                  <span className="text-sm font-mono w-10 text-right">{markupPct}%</span>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-igc-ink mb-2">Tax</label>
+                <div className="flex items-center gap-1">
+                  <input
+                    type="number"
+                    step={0.125}
+                    value={taxPct}
+                    onChange={(e) => setTaxPct(+e.target.value || 0)}
+                    className="flex-1 px-2 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                  />
+                  <span className="text-igc-muted text-sm">%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-white border border-igc-line rounded-lg p-6">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted mb-4">Complexity</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {(Object.keys(COMPLEXITY_MULTIPLIERS) as Array<keyof ComplexityFlags>).map((key) => (
+              <label
+                key={key}
+                className={`flex items-center gap-2 px-3 py-2 rounded-md border cursor-pointer text-sm ${
+                  flags[key]
+                    ? 'bg-igc-purple-light border-igc-purple text-igc-ink'
+                    : 'bg-white border-igc-line text-igc-ink hover:border-igc-purple'
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  checked={flags[key]}
+                  onChange={(e) => setFlags((f) => ({ ...f, [key]: e.target.checked }))}
+                  className="accent-igc-purple"
+                />
+                <span>{COMPLEXITY_MULTIPLIERS[key].label}</span>
+              </label>
+            ))}
+          </div>
+        </section>
+      </div>
+
+      {/* RIGHT — summary */}
+      <aside className="space-y-4">
+        <div className="sticky top-6 space-y-4">
+          <section className="bg-white border border-igc-line rounded-lg p-6">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted mb-4">Quote summary</h2>
+
+            <div className="space-y-2 text-sm">
+              <SummaryRow label="Glass area" value={`${fmtNum(calc.totalSqFt)} sq ft`} />
+              <SummaryRow
+                label={`Waste-adjusted (+${wastePct}%)`}
+                value={`${fmtNum(calc.wasteAdjustedSqFt)} sq ft`}
+              />
+              <SummaryRow
+                label="Film roll"
+                value={`${film.rollWidthIn}" wide · ${fmtNum(calc.recommendedRollFt)} linear ft`}
+              />
+              {!calc.rollWidthAdequate && (
+                <div className="flex items-start gap-2 text-xs text-igc-warn bg-amber-50 border border-amber-200 rounded-md px-3 py-2 mt-2">
+                  <span>⚠</span>
+                  <span>
+                    Widest window ({calc.widestWindowIn}") exceeds roll width ({film.rollWidthIn}"). Seams required —
+                    consider wider roll or budget seam labor.
+                  </span>
+                </div>
+              )}
+              {calc.laborMultiplier > 1 && (
+                <SummaryRow
+                  label="Labor multiplier"
+                  value={`×${calc.laborMultiplier.toFixed(2)}`}
+                  muted
+                />
+              )}
+            </div>
+
+            <div className="border-t border-igc-line mt-4 pt-4 space-y-2 text-sm">
+              <SummaryRow label="Material" value={fmtCurrency(calc.materialCost)} />
+              <SummaryRow label="Labor" value={fmtCurrency(calc.laborCost)} />
+              <SummaryRow label="Subtotal" value={fmtCurrency(calc.subtotal)} bold />
+              <SummaryRow label={`Markup (${markupPct}%)`} value={fmtCurrency(calc.markup)} muted />
+              <SummaryRow label={`Tax (${taxPct}%)`} value={fmtCurrency(calc.tax)} muted />
+            </div>
+
+            <div className="border-t-2 border-igc-purple mt-4 pt-4">
+              <div className="flex items-baseline justify-between">
+                <span className="text-xs uppercase tracking-wider text-igc-muted">Total</span>
+                <span className="text-2xl font-semibold text-igc-ink">{fmtCurrency(calc.total)}</span>
+              </div>
+            </div>
+          </section>
+
+          <div className="text-xs text-igc-muted px-2">
+            Coming next: wallcovering calc, mural calc, estimate builder, PDF export.
+          </div>
+        </div>
+      </aside>
+    </div>
+  )
+}
+
+function SummaryRow({
+  label,
+  value,
+  bold,
+  muted,
+}: {
+  label: string
+  value: string
+  bold?: boolean
+  muted?: boolean
+}) {
+  return (
+    <div className="flex items-baseline justify-between">
+      <span className={`${muted ? 'text-igc-muted' : 'text-igc-ink'} ${bold ? 'font-semibold' : ''}`}>{label}</span>
+      <span className={`font-mono ${bold ? 'font-semibold' : ''} ${muted ? 'text-igc-muted' : 'text-igc-ink'}`}>
+        {value}
+      </span>
+    </div>
+  )
+}
