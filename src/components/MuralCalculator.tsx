@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useEstimate } from '../estimate/EstimateContext'
+import { useCatalog } from '../catalog/CatalogContext'
 
 type Wall = {
   id: string
@@ -8,22 +9,15 @@ type Wall = {
   heightFt: number
 }
 
-type MuralStyle = {
-  id: string
-  name: string
-  materialPerSqFt: number
-  laborPerSqFt: number
-  description: string
-}
-
 type ProjectType = 'residential' | 'commercial'
 
-const DEFAULT_STYLES: MuralStyle[] = [
-  { id: 'simple-flat', name: 'Simple · flat color / geometric', materialPerSqFt: 3, laborPerSqFt: 6, description: 'Blocked shapes, low detail' },
-  { id: 'standard-hand', name: 'Standard · hand-painted scene', materialPerSqFt: 5, laborPerSqFt: 12, description: 'Mid-detail, realism' },
-  { id: 'detailed-custom', name: 'Detailed · custom artwork', materialPerSqFt: 8, laborPerSqFt: 20, description: 'High detail, mixed media' },
-  { id: 'premium-signature', name: 'Premium · signature / branded', materialPerSqFt: 15, laborPerSqFt: 25, description: 'Flagship piece, full signage' },
-]
+const FALLBACK_STYLE = {
+  id: 'none',
+  name: '—',
+  materialPerSqFt: 0,
+  laborPerSqFt: 0,
+  description: '',
+}
 
 const ACCESS_MULTIPLIERS = {
   under10: { labor: 1.0, label: 'Under 10 ft — step stool' },
@@ -45,17 +39,19 @@ function fmtNum(n: number, digits = 1) {
 
 export default function MuralCalculator() {
   const { addQuote } = useEstimate()
+  const { catalog } = useCatalog()
+  const muralStyles = catalog.muralStyles
   const [walls, setWalls] = useState<Wall[]>([
     { id: uid(), label: 'Feature wall', widthFt: 20, heightFt: 12 },
   ])
-  const [styleId, setStyleId] = useState<string>(DEFAULT_STYLES[1].id)
+  const [styleId, setStyleId] = useState<string>(muralStyles[1]?.id ?? muralStyles[0]?.id ?? '')
   const [access, setAccess] = useState<AccessKey>('ladder')
   const [designFee, setDesignFee] = useState<number>(1500)
   const [markupPct, setMarkupPct] = useState<number>(35)
   const [taxPct, setTaxPct] = useState<number>(7)
   const [projectType, setProjectType] = useState<ProjectType>('residential')
 
-  const style = DEFAULT_STYLES.find((s) => s.id === styleId)!
+  const style = muralStyles.find((s) => s.id === styleId) ?? muralStyles[0] ?? FALLBACK_STYLE
   const accessMult = ACCESS_MULTIPLIERS[access].labor
 
   const calc = useMemo(() => {
@@ -159,7 +155,7 @@ export default function MuralCalculator() {
           <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted mb-4">Style & complexity</h2>
 
           <div className="space-y-2">
-            {DEFAULT_STYLES.map((s) => (
+            {muralStyles.map((s) => (
               <label
                 key={s.id}
                 className={`flex items-start gap-3 px-4 py-3 rounded-md border cursor-pointer text-sm ${

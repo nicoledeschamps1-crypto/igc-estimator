@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useEstimate } from '../estimate/EstimateContext'
+import { useCatalog } from '../catalog/CatalogContext'
 
 type Room = {
   id: string
@@ -16,21 +17,14 @@ type PrepItem = {
   ratePerSqFt: number
 }
 
-type WallcoveringOption = {
-  id: string
-  name: string
-  rollType: 'single' | 'double'
-  usableSqFtPerRoll: number
-  costPerRoll: number
-  patternWastePct: number
+const FALLBACK_WALLCOVERING = {
+  id: 'none',
+  name: '—',
+  rollType: 'single' as const,
+  usableSqFtPerRoll: 27,
+  costPerRoll: 0,
+  patternWastePct: 0,
 }
-
-const DEFAULT_WALLCOVERINGS: WallcoveringOption[] = [
-  { id: 'single-standard', name: 'Single roll · standard', rollType: 'single', usableSqFtPerRoll: 27, costPerRoll: 85, patternWastePct: 15 },
-  { id: 'single-patterned', name: 'Single roll · large pattern', rollType: 'single', usableSqFtPerRoll: 25, costPerRoll: 140, patternWastePct: 25 },
-  { id: 'double-commercial', name: 'Double roll · commercial 54"', rollType: 'double', usableSqFtPerRoll: 60, costPerRoll: 260, patternWastePct: 12 },
-  { id: 'double-vinyl', name: 'Double roll · Type II vinyl', rollType: 'double', usableSqFtPerRoll: 56, costPerRoll: 195, patternWastePct: 10 },
-]
 
 const DEFAULT_PREP_ITEMS: Array<Omit<PrepItem, 'id'>> = [
   { label: 'Skim coat', sqFt: 0, ratePerSqFt: 2.5 },
@@ -50,10 +44,12 @@ function fmtNum(n: number, digits = 1) {
 
 export default function WallcoveringCalculator() {
   const { addQuote } = useEstimate()
+  const { catalog } = useCatalog()
+  const wallcoverings = catalog.wallcoverings
   const [rooms, setRooms] = useState<Room[]>([
     { id: uid(), label: 'Lobby', perimeterFt: 60, heightFt: 10, openingsSqFt: 40 },
   ])
-  const [materialId, setMaterialId] = useState<string>(DEFAULT_WALLCOVERINGS[0].id)
+  const [materialId, setMaterialId] = useState<string>(wallcoverings[0]?.id ?? '')
   const [extraWastePct, setExtraWastePct] = useState<number>(5)
   const [laborPerSqFt, setLaborPerSqFt] = useState<number>(5.5)
   const [markupPct, setMarkupPct] = useState<number>(35)
@@ -61,7 +57,7 @@ export default function WallcoveringCalculator() {
   const [prep, setPrep] = useState<PrepItem[]>(DEFAULT_PREP_ITEMS.map((p) => ({ ...p, id: uid() })))
   const [clientSuppliesMaterial, setClientSuppliesMaterial] = useState<boolean>(false)
 
-  const material = DEFAULT_WALLCOVERINGS.find((m) => m.id === materialId)!
+  const material = wallcoverings.find((m) => m.id === materialId) ?? wallcoverings[0] ?? FALLBACK_WALLCOVERING
 
   const calc = useMemo(() => {
     const grossWallSqFt = rooms.reduce((s, r) => s + r.perimeterFt * r.heightFt, 0)
@@ -198,7 +194,7 @@ export default function WallcoveringCalculator() {
                 onChange={(e) => setMaterialId(e.target.value)}
                 className="w-full px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
               >
-                {DEFAULT_WALLCOVERINGS.map((m) => (
+                {wallcoverings.map((m) => (
                   <option key={m.id} value={m.id}>
                     {m.name} — {m.usableSqFtPerRoll} sf/roll · ${m.costPerRoll} · {m.patternWastePct}% pattern waste
                   </option>

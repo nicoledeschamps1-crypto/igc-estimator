@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useEstimate } from '../estimate/EstimateContext'
+import { useCatalog } from '../catalog/CatalogContext'
 
 type Window = {
   id: string
@@ -7,13 +8,6 @@ type Window = {
   qty: number
   widthIn: number
   heightIn: number
-}
-
-type FilmOption = {
-  id: string
-  name: string
-  rollWidthIn: number
-  costPerSqFt: number
 }
 
 type ComplexityFlags = {
@@ -24,12 +18,7 @@ type ComplexityFlags = {
   oldFilmRemoval: boolean
 }
 
-const DEFAULT_FILMS: FilmOption[] = [
-  { id: 'privacy-frost', name: 'Privacy Frost', rollWidthIn: 60, costPerSqFt: 4.5 },
-  { id: 'solar-ceramic', name: 'Solar Ceramic', rollWidthIn: 48, costPerSqFt: 7.25 },
-  { id: 'security-8mil', name: 'Security 8mil', rollWidthIn: 60, costPerSqFt: 9.0 },
-  { id: 'decorative-custom', name: 'Decorative / Custom Print', rollWidthIn: 54, costPerSqFt: 12.0 },
-]
+const FALLBACK_FILM = { id: 'none', name: '—', rollWidthIn: 60, costPerSqFt: 0 }
 
 const COMPLEXITY_MULTIPLIERS = {
   archedGlass: { labor: 1.4, label: 'Arched / curved glass (+40% labor)' },
@@ -53,10 +42,12 @@ function fmtNum(n: number, digits = 1) {
 
 export default function FilmCalculator() {
   const { addQuote } = useEstimate()
+  const { catalog } = useCatalog()
+  const films = catalog.films
   const [windows, setWindows] = useState<Window[]>([
     { id: uid(), label: 'Conference room', qty: 12, widthIn: 48, heightIn: 60 },
   ])
-  const [filmId, setFilmId] = useState<string>(DEFAULT_FILMS[0].id)
+  const [filmId, setFilmId] = useState<string>(films[0]?.id ?? '')
   const [wastePct, setWastePct] = useState<number>(10)
   const [laborPerSqFt, setLaborPerSqFt] = useState<number>(5.0)
   const [markupPct, setMarkupPct] = useState<number>(35)
@@ -69,7 +60,7 @@ export default function FilmCalculator() {
     oldFilmRemoval: false,
   })
 
-  const film = DEFAULT_FILMS.find((f) => f.id === filmId)!
+  const film = films.find((f) => f.id === filmId) ?? films[0] ?? FALLBACK_FILM
 
   const calc = useMemo(() => {
     const totalSqInches = windows.reduce((s, w) => s + w.qty * w.widthIn * w.heightIn, 0)
@@ -199,7 +190,7 @@ export default function FilmCalculator() {
                 onChange={(e) => setFilmId(e.target.value)}
                 className="w-full px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
               >
-                {DEFAULT_FILMS.map((f) => (
+                {films.map((f) => (
                   <option key={f.id} value={f.id}>
                     {f.name} — {f.rollWidthIn}" roll · ${f.costPerSqFt}/sf
                   </option>

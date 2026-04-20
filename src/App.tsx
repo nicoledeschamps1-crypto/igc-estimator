@@ -3,22 +3,29 @@ import FilmCalculator from './components/FilmCalculator'
 import WallcoveringCalculator from './components/WallcoveringCalculator'
 import MuralCalculator from './components/MuralCalculator'
 import EstimatePanel from './components/EstimatePanel'
+import CatalogEditor from './components/CatalogEditor'
+import GuidePanel from './components/GuidePanel'
 import { EstimateProvider, useEstimate } from './estimate/EstimateContext'
+import { CatalogProvider } from './catalog/CatalogContext'
 
-type Tab = 'film' | 'wallcovering' | 'mural' | 'estimate'
+type Tab = 'film' | 'wallcovering' | 'mural' | 'estimate' | 'catalog' | 'guide'
 
-const TABS: Array<{ id: Tab; label: string; sublabel: string }> = [
-  { id: 'film', label: 'Window Film', sublabel: 'Privacy · solar · security · decorative' },
-  { id: 'wallcovering', label: 'Wallcovering', sublabel: 'Commercial vinyl · patterned · custom' },
-  { id: 'mural', label: 'Mural', sublabel: 'Hand-painted · branded · signature' },
-  { id: 'estimate', label: 'Estimate', sublabel: 'Combined proposal · PDF export' },
+const TABS: Array<{ id: Tab; label: string; sublabel: string; group: 'trades' | 'settings' }> = [
+  { id: 'film', label: 'Window Film', sublabel: 'Privacy · solar · security · decorative', group: 'trades' },
+  { id: 'wallcovering', label: 'Wallcovering', sublabel: 'Commercial vinyl · patterned · custom', group: 'trades' },
+  { id: 'mural', label: 'Mural', sublabel: 'Hand-painted · branded · signature', group: 'trades' },
+  { id: 'estimate', label: 'Estimate', sublabel: 'Combined proposal · PDF export', group: 'trades' },
+  { id: 'catalog', label: 'Catalog', sublabel: 'Edit default rates + products', group: 'settings' },
+  { id: 'guide', label: 'Guide', sublabel: 'How it works · roadmap', group: 'settings' },
 ]
 
 export default function App() {
   return (
-    <EstimateProvider>
-      <AppShell />
-    </EstimateProvider>
+    <CatalogProvider>
+      <EstimateProvider>
+        <AppShell />
+      </EstimateProvider>
+    </CatalogProvider>
   )
 }
 
@@ -39,26 +46,30 @@ function AppShell() {
               <div className="text-xs text-igc-muted">{active.sublabel}</div>
             </div>
           </div>
-          <div className="text-xs text-igc-muted">v0.3 · prototype</div>
+          <div className="text-xs text-igc-muted">v0.4 · prototype</div>
         </div>
 
         <nav className="max-w-7xl mx-auto px-6">
-          <div className="flex gap-1 -mb-px">
-            {TABS.map((t) => {
+          <div className="flex items-end gap-1 -mb-px">
+            {TABS.map((t, i) => {
               const isActive = t.id === tab
+              const prev = TABS[i - 1]
+              const needsDivider = prev && prev.group !== t.group
               return (
-                <button
-                  key={t.id}
-                  onClick={() => setTab(t.id)}
-                  className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
-                    isActive
-                      ? 'border-igc-purple text-igc-purple'
-                      : 'border-transparent text-igc-muted hover:text-igc-ink'
-                  }`}
-                >
-                  {t.label}
-                  {t.id === 'estimate' && <EstimateBadge />}
-                </button>
+                <div key={t.id} className="flex items-end">
+                  {needsDivider && <span className="mx-2 mb-3 w-px h-4 bg-igc-line" aria-hidden />}
+                  <button
+                    onClick={() => setTab(t.id)}
+                    className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
+                      isActive
+                        ? 'border-igc-purple text-igc-purple'
+                        : 'border-transparent text-igc-muted hover:text-igc-ink'
+                    }`}
+                  >
+                    {t.label}
+                    {t.id === 'estimate' && <EstimateBadge />}
+                  </button>
+                </div>
               )
             })}
           </div>
@@ -77,6 +88,12 @@ function AppShell() {
         </div>
         <div hidden={tab !== 'estimate'}>
           <EstimatePanel />
+        </div>
+        <div hidden={tab !== 'catalog'}>
+          <CatalogEditor />
+        </div>
+        <div hidden={tab !== 'guide'}>
+          <GuidePanel />
         </div>
       </main>
 
