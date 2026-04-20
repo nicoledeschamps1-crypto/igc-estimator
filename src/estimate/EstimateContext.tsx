@@ -35,16 +35,36 @@ export type BrandInfo = {
   logoWidthPt: number
 }
 
+export type EstimateStatus = 'draft' | 'sent' | 'accepted' | 'declined'
+
+export type SavedEstimate = {
+  id: string
+  status: EstimateStatus
+  quotes: SavedQuote[]
+  client: ClientInfo
+  total: number
+  createdAt: number
+  updatedAt: number
+}
+
 type Ctx = {
   quotes: SavedQuote[]
   client: ClientInfo
   brand: BrandInfo
+  savedEstimates: SavedEstimate[]
+  currentEstimateId: string | null
   addQuote: (q: Omit<SavedQuote, 'id' | 'createdAt'>) => void
   removeQuote: (id: string) => void
   clearQuotes: () => void
   setClient: (patch: Partial<ClientInfo>) => void
   setBrand: (patch: Partial<BrandInfo>) => void
   resetBrand: () => void
+  saveEstimate: () => string
+  loadEstimate: (id: string) => void
+  duplicateEstimate: (id: string) => string
+  deleteEstimate: (id: string) => void
+  updateEstimateStatus: (id: string, status: EstimateStatus) => void
+  startNewEstimate: () => void
   grandTotal: number
 }
 
@@ -86,18 +106,41 @@ const DEFAULT_BRAND: BrandInfo = {
   logoWidthPt: 72,
 }
 
-function loadState(): { quotes: SavedQuote[]; client: ClientInfo; brand: BrandInfo } {
+type StoredState = {
+  quotes: SavedQuote[]
+  client: ClientInfo
+  brand: BrandInfo
+  savedEstimates: SavedEstimate[]
+  currentEstimateId: string | null
+}
+
+function loadState(): StoredState {
+  const empty: StoredState = {
+    quotes: [],
+    client: DEFAULT_CLIENT,
+    brand: DEFAULT_BRAND,
+    savedEstimates: [],
+    currentEstimateId: null,
+  }
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return { quotes: [], client: DEFAULT_CLIENT, brand: DEFAULT_BRAND }
+    if (!raw) return empty
     const parsed = JSON.parse(raw)
     return {
       quotes: Array.isArray(parsed.quotes) ? parsed.quotes : [],
-      client: parsed.client && typeof parsed.client === 'object' ? { ...DEFAULT_CLIENT, ...parsed.client } : DEFAULT_CLIENT,
-      brand: parsed.brand && typeof parsed.brand === 'object' ? { ...DEFAULT_BRAND, ...parsed.brand } : DEFAULT_BRAND,
+      client:
+        parsed.client && typeof parsed.client === 'object'
+          ? { ...DEFAULT_CLIENT, ...parsed.client }
+          : DEFAULT_CLIENT,
+      brand:
+        parsed.brand && typeof parsed.brand === 'object'
+          ? { ...DEFAULT_BRAND, ...parsed.brand }
+          : DEFAULT_BRAND,
+      savedEstimates: Array.isArray(parsed.savedEstimates) ? parsed.savedEstimates : [],
+      currentEstimateId: typeof parsed.currentEstimateId === 'string' ? parsed.currentEstimateId : null,
     }
   } catch {
-    return { quotes: [], client: DEFAULT_CLIENT, brand: DEFAULT_BRAND }
+    return empty
   }
 }
 
@@ -106,14 +149,19 @@ export function EstimateProvider({ children }: { children: ReactNode }) {
   const [quotes, setQuotes] = useState<SavedQuote[]>(initial.quotes)
   const [client, setClientState] = useState<ClientInfo>(initial.client)
   const [brand, setBrandState] = useState<BrandInfo>(initial.brand)
+  const [savedEstimates, setSavedEstimates] = useState<SavedEstimate[]>(initial.savedEstimates)
+  const [currentEstimateId, setCurrentEstimateId] = useState<string | null>(initial.currentEstimateId)
 
   useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ quotes, client, brand }))
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({ quotes, client, brand, savedEstimates, currentEstimateId }),
+      )
     } catch {
       // quota exceeded (e.g. huge logo), private mode — fail silently
     }
-  }, [quotes, client, brand])
+  }, [quotes, client, brand, savedEstimates, currentEstimateId])
 
   // Load bundled IGC logo as default when user has no logo set
   useEffect(() => {
@@ -159,18 +207,105 @@ export function EstimateProvider({ children }: { children: ReactNode }) {
 
   const grandTotal = quotes.reduce((s, q) => s + q.total, 0)
 
+  function saveEstimate(): string {
+    const now = Date.now()
+    const workspaceTotal = roundCents(grandTotal)
+    if (currentEstimateId) {
+      setSavedEstimates((list) =>
+        list.map((e) =>
+          e.id === currentEstimateId
+            ? { ...e, quotes, client, total: workspaceTotal, updatedAt: now }
+            : e,
+        ),
+      )
+      return currentEstimateId
+    }
+    const id = uid()
+    const fresh: SavedEstimate = {
+      id,
+      status: 'draft',
+      quotes,
+      client,
+      total: workspaceTotal,
+      createdAt: now,
+      updatedAt: now,
+    }
+    setSavedEstimates((list) => [fresh, ...list])
+    setCurrentEstimateId(id)
+    return id
+  }
+
+  function loadEstimate(id: string) {
+    const target = savedEstimates.find((e) => e.id === id)
+    if (!target) return
+    setQuotes(target.quotes)
+    setClientState(target.client)
+    setCurrentEstimateId(id)
+  }
+
+  function duplicateEstimate(id: string): string {
+    const target = savedEstimates.find((e) => e.id === id)
+    if (!target) return ''
+    const newId = uid()
+    const now = Date.now()
+    const copy: SavedEstimate = {
+      id: newId,
+      status: 'draft',
+      quotes: target.quotes.map((q) => ({ ...q, id: uid(), createdAt: now })),
+      client: {
+        ...target.client,
+        estimateNumber: '',
+        dateIso: todayIso(),
+      },
+      total: target.total,
+      createdAt: now,
+      updatedAt: now,
+    }
+    setSavedEstimates((list) => [copy, ...list])
+    return newId
+  }
+
+  function deleteEstimate(id: string) {
+    setSavedEstimates((list) => list.filter((e) => e.id !== id))
+    if (currentEstimateId === id) {
+      setCurrentEstimateId(null)
+      setQuotes([])
+      setClientState({ ...DEFAULT_CLIENT, dateIso: todayIso() })
+    }
+  }
+
+  function updateEstimateStatus(id: string, status: EstimateStatus) {
+    setSavedEstimates((list) =>
+      list.map((e) => (e.id === id ? { ...e, status, updatedAt: Date.now() } : e)),
+    )
+  }
+
+  function startNewEstimate() {
+    setCurrentEstimateId(null)
+    setQuotes([])
+    setClientState({ ...DEFAULT_CLIENT, dateIso: todayIso() })
+  }
+
   return (
     <EstimateCtx.Provider
       value={{
         quotes,
         client,
         brand,
+        savedEstimates,
+        currentEstimateId,
         addQuote,
         removeQuote,
         clearQuotes,
         setClient,
         setBrand,
         resetBrand,
+        saveEstimate,
+        loadEstimate,
+        duplicateEstimate,
+        deleteEstimate,
+        updateEstimateStatus,
+        startNewEstimate,
         grandTotal,
       }}
     >

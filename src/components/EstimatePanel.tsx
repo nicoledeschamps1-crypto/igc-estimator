@@ -20,16 +20,73 @@ function fmtCurrency(n: number) {
 }
 
 export default function EstimatePanel() {
-  const { quotes, client, brand, setClient, removeQuote, clearQuotes, grandTotal } = useEstimate()
+  const {
+    quotes,
+    client,
+    brand,
+    setClient,
+    removeQuote,
+    clearQuotes,
+    grandTotal,
+    currentEstimateId,
+    savedEstimates,
+    saveEstimate,
+    startNewEstimate,
+  } = useEstimate()
+
+  const current = currentEstimateId ? savedEstimates.find((e) => e.id === currentEstimateId) : null
 
   function onSavePdf() {
     generatePdf(quotes, client, grandTotal, brand)
+  }
+
+  function onSave() {
+    saveEstimate()
   }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-6">
       {/* LEFT — editable controls */}
       <div className="space-y-6 min-w-0">
+        <section className="bg-white border border-igc-line rounded-lg p-4 flex items-center justify-between gap-3 flex-wrap">
+          <div className="min-w-0">
+            <div className="text-[11px] uppercase tracking-wider text-igc-muted font-semibold">Workspace</div>
+            <div className="text-sm font-medium text-igc-ink truncate">
+              {current ? (
+                <>
+                  Editing: {current.client.projectName || current.client.clientName || 'Untitled estimate'}
+                  <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded bg-igc-purple-light text-igc-purple uppercase tracking-wider font-semibold align-middle">
+                    {current.status}
+                  </span>
+                </>
+              ) : (
+                <span className="text-igc-muted">New estimate (not yet saved)</span>
+              )}
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            {current && (
+              <button
+                onClick={() => {
+                  if (confirm('Start a new estimate? Any unsaved changes in the workspace will be cleared.')) {
+                    startNewEstimate()
+                  }
+                }}
+                className="px-3 py-1.5 text-xs text-igc-muted hover:text-igc-ink border border-igc-line rounded-md"
+              >
+                Start new
+              </button>
+            )}
+            <button
+              onClick={onSave}
+              disabled={quotes.length === 0}
+              className="px-4 py-2 text-sm font-medium rounded-md border border-igc-purple text-igc-purple hover:bg-igc-purple hover:text-white transition-colors disabled:border-igc-line disabled:text-igc-muted disabled:hover:bg-transparent disabled:hover:text-igc-muted disabled:cursor-not-allowed"
+            >
+              {current ? 'Save changes' : 'Save to pipeline'}
+            </button>
+          </div>
+        </section>
+
         <BrandSettings />
 
         <section className="bg-white border border-igc-line rounded-lg p-6">

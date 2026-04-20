@@ -36,14 +36,15 @@ const MILESTONES: Milestone[] = [
   },
   {
     id: 'M3',
-    label: 'M3 · Team + pipeline',
-    status: 'planned',
-    summary: 'Saved estimates, login, project tracking',
+    label: 'M3 · Pipeline + saved estimates',
+    status: 'done',
+    summary: 'Save · reopen · duplicate · track status · forecast revenue',
     items: [
-      'Save estimates to a list (Draft / Sent / Accepted / Declined)',
-      'Simple email+password login for dad + sisters',
-      'Pipeline dashboard: revenue forecast, win rate, last activity',
-      'Duplicate + edit past estimates as templates',
+      'Save estimates with status (Draft / Sent / Accepted / Declined)',
+      'Pipeline dashboard: revenue forecast, accepted total, win rate, counts',
+      'Filter by status · click any row to reopen and edit',
+      'Duplicate past estimates as starting templates',
+      'Login + multi-user deferred — dad is the only user today',
     ],
   },
   {
@@ -86,7 +87,8 @@ const HOW_IT_WORKS = [
   { step: '1', label: 'Pick a trade', detail: 'Window Film, Wallcovering, or Mural tab. Fill in the dimensions and options.' },
   { step: '2', label: 'Add to estimate', detail: 'Click the purple button. Switch trades and add more line items as needed.' },
   { step: '3', label: 'Fill project info', detail: 'In the Estimate tab, add the client name, address, estimate number, and any notes.' },
-  { step: '4', label: 'Download PDF', detail: 'Live preview on the right shows exactly what your client will see. Hit Download PDF when you\'re ready to send.' },
+  { step: '4', label: 'Save to pipeline', detail: 'Hit Save to pipeline. Estimates stick around forever in the Pipeline tab — reopen, duplicate, or change status any time.' },
+  { step: '5', label: 'Download PDF', detail: 'Live preview on the right shows exactly what your client will see. Hit Download PDF when you\'re ready to send, then mark the estimate as Sent.' },
 ]
 
 export default function GuidePanel() {

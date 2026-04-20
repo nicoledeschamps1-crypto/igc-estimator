@@ -3,18 +3,20 @@ import FilmCalculator from './components/FilmCalculator'
 import WallcoveringCalculator from './components/WallcoveringCalculator'
 import MuralCalculator from './components/MuralCalculator'
 import EstimatePanel from './components/EstimatePanel'
+import PipelinePanel from './components/PipelinePanel'
 import CatalogEditor from './components/CatalogEditor'
 import GuidePanel from './components/GuidePanel'
 import { EstimateProvider, useEstimate } from './estimate/EstimateContext'
 import { CatalogProvider } from './catalog/CatalogContext'
 
-type Tab = 'film' | 'wallcovering' | 'mural' | 'estimate' | 'catalog' | 'guide'
+type Tab = 'film' | 'wallcovering' | 'mural' | 'estimate' | 'pipeline' | 'catalog' | 'guide'
 
-const TABS: Array<{ id: Tab; label: string; sublabel: string; group: 'trades' | 'settings' }> = [
+const TABS: Array<{ id: Tab; label: string; sublabel: string; group: 'trades' | 'pipeline' | 'settings' }> = [
   { id: 'film', label: 'Window Film', sublabel: 'Privacy · solar · security · decorative', group: 'trades' },
   { id: 'wallcovering', label: 'Wallcovering', sublabel: 'Commercial vinyl · patterned · custom', group: 'trades' },
   { id: 'mural', label: 'Mural', sublabel: 'Hand-painted · branded · signature', group: 'trades' },
   { id: 'estimate', label: 'Estimate', sublabel: 'Combined proposal · PDF export', group: 'trades' },
+  { id: 'pipeline', label: 'Pipeline', sublabel: 'Saved estimates · revenue forecast', group: 'pipeline' },
   { id: 'catalog', label: 'Catalog', sublabel: 'Edit default rates + products', group: 'settings' },
   { id: 'guide', label: 'Guide', sublabel: 'How it works · roadmap', group: 'settings' },
 ]
@@ -46,7 +48,7 @@ function AppShell() {
               <div className="text-xs text-igc-muted">{active.sublabel}</div>
             </div>
           </div>
-          <div className="text-xs text-igc-muted">v0.4 · prototype</div>
+          <div className="text-xs text-igc-muted">v0.5 · prototype</div>
         </div>
 
         <nav className="max-w-7xl mx-auto px-6">
@@ -68,6 +70,7 @@ function AppShell() {
                   >
                     {t.label}
                     {t.id === 'estimate' && <EstimateBadge />}
+                    {t.id === 'pipeline' && <PipelineBadge />}
                   </button>
                 </div>
               )
@@ -88,6 +91,9 @@ function AppShell() {
         </div>
         <div hidden={tab !== 'estimate'}>
           <EstimatePanel />
+        </div>
+        <div hidden={tab !== 'pipeline'}>
+          <PipelinePanel onOpenEstimate={() => setTab('estimate')} />
         </div>
         <div hidden={tab !== 'catalog'}>
           <CatalogEditor />
@@ -113,6 +119,16 @@ function EstimateBadge() {
   return (
     <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-igc-purple text-white text-[10px] font-semibold">
       {quotes.length}
+    </span>
+  )
+}
+
+function PipelineBadge() {
+  const { savedEstimates } = useEstimate()
+  if (savedEstimates.length === 0) return null
+  return (
+    <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-slate-200 text-slate-700 text-[10px] font-semibold">
+      {savedEstimates.length}
     </span>
   )
 }
