@@ -115,7 +115,10 @@ export function CatalogProvider({ children }: { children: ReactNode }) {
     }))
   }
   function removeFilm(id: string) {
-    setCatalog((c) => ({ ...c, films: c.films.filter((f) => f.id !== id) }))
+    setCatalog((c) => {
+      if (c.films.length <= 1) return c
+      return { ...c, films: c.films.filter((f) => f.id !== id) }
+    })
   }
 
   function updateWallcovering(id: string, patch: Partial<WallcoveringOption>) {
@@ -134,7 +137,10 @@ export function CatalogProvider({ children }: { children: ReactNode }) {
     }))
   }
   function removeWallcovering(id: string) {
-    setCatalog((c) => ({ ...c, wallcoverings: c.wallcoverings.filter((w) => w.id !== id) }))
+    setCatalog((c) => {
+      if (c.wallcoverings.length <= 1) return c
+      return { ...c, wallcoverings: c.wallcoverings.filter((w) => w.id !== id) }
+    })
   }
 
   function updateMuralStyle(id: string, patch: Partial<MuralStyle>) {
@@ -153,7 +159,10 @@ export function CatalogProvider({ children }: { children: ReactNode }) {
     }))
   }
   function removeMuralStyle(id: string) {
-    setCatalog((c) => ({ ...c, muralStyles: c.muralStyles.filter((m) => m.id !== id) }))
+    setCatalog((c) => {
+      if (c.muralStyles.length <= 1) return c
+      return { ...c, muralStyles: c.muralStyles.filter((m) => m.id !== id) }
+    })
   }
 
   function resetCategory(cat: CatalogCategory) {

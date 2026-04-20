@@ -62,47 +62,38 @@ export default function CatalogEditor() {
         </div>
 
         <div className="p-4">
-          <div className="grid grid-cols-[1fr_110px_110px_40px] gap-2 text-[10px] font-medium text-igc-muted uppercase tracking-wider px-2 pb-2">
+          <div className="grid grid-cols-[minmax(0,1fr)_140px_160px_32px] gap-4 text-[10px] font-medium text-igc-muted uppercase tracking-wider px-3 pb-2">
             <div>Name</div>
-            <div className="text-right">Roll width</div>
-            <div className="text-right">Cost / sq ft</div>
+            <div>Roll width</div>
+            <div>Cost / sq ft</div>
             <div></div>
           </div>
 
           <div className="space-y-2">
             {catalog.films.map((f) => (
-              <div key={f.id} className="grid grid-cols-[1fr_110px_110px_40px] gap-2 items-center">
+              <div key={f.id} className="grid grid-cols-[minmax(0,1fr)_140px_160px_32px] gap-4 items-center">
                 <input
                   type="text"
                   value={f.name}
                   onChange={(e) => updateFilm(f.id, { name: e.target.value })}
-                  className="px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                  className="min-w-0 px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
                 />
-                <div className="flex items-center gap-1">
-                  <input
-                    type="number"
-                    min={1}
-                    value={f.rollWidthIn}
-                    onChange={(e) => updateFilm(f.id, { rollWidthIn: +e.target.value || 0 })}
-                    className="flex-1 px-2 py-2 border border-igc-line rounded-md text-sm text-right focus:outline-none focus:border-igc-purple"
-                  />
-                  <span className="text-xs text-igc-muted">in</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <span className="text-igc-muted text-sm">$</span>
-                  <input
-                    type="number"
-                    step={0.25}
-                    min={0}
-                    value={f.costPerSqFt}
-                    onChange={(e) => updateFilm(f.id, { costPerSqFt: +e.target.value || 0 })}
-                    className="flex-1 px-2 py-2 border border-igc-line rounded-md text-sm text-right focus:outline-none focus:border-igc-purple"
-                  />
-                </div>
+                <UnitInput
+                  unit="in"
+                  min={1}
+                  value={f.rollWidthIn}
+                  onChange={(v) => updateFilm(f.id, { rollWidthIn: v })}
+                />
+                <MoneyInput
+                  step={0.25}
+                  value={f.costPerSqFt}
+                  onChange={(v) => updateFilm(f.id, { costPerSqFt: v })}
+                />
                 <button
                   onClick={() => removeFilm(f.id)}
-                  className="text-igc-muted hover:text-red-500 text-lg"
-                  title="Remove"
+                  disabled={catalog.films.length <= 1}
+                  className="text-igc-muted hover:text-red-500 text-lg leading-none disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:text-igc-muted"
+                  title={catalog.films.length <= 1 ? 'At least one film type is required' : 'Remove'}
                 >
                   ×
                 </button>
@@ -138,65 +129,57 @@ export default function CatalogEditor() {
         </div>
 
         <div className="p-4">
-          <div className="grid grid-cols-[1.4fr_90px_100px_110px_90px_40px] gap-2 text-[10px] font-medium text-igc-muted uppercase tracking-wider px-2 pb-2">
+          <div className="grid grid-cols-[minmax(0,1.4fr)_100px_110px_140px_120px_32px] gap-4 text-[10px] font-medium text-igc-muted uppercase tracking-wider px-3 pb-2">
             <div>Name</div>
             <div>Roll type</div>
-            <div className="text-right">Sf/roll</div>
-            <div className="text-right">Cost/roll</div>
-            <div className="text-right">Pattern %</div>
+            <div>Sf / roll</div>
+            <div>Cost / roll</div>
+            <div>Pattern waste</div>
             <div></div>
           </div>
 
           <div className="space-y-2">
             {catalog.wallcoverings.map((w) => (
-              <div key={w.id} className="grid grid-cols-[1.4fr_90px_100px_110px_90px_40px] gap-2 items-center">
+              <div
+                key={w.id}
+                className="grid grid-cols-[minmax(0,1.4fr)_100px_110px_140px_120px_32px] gap-4 items-center"
+              >
                 <input
                   type="text"
                   value={w.name}
                   onChange={(e) => updateWallcovering(w.id, { name: e.target.value })}
-                  className="px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                  className="min-w-0 px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
                 />
                 <select
                   value={w.rollType}
                   onChange={(e) => updateWallcovering(w.id, { rollType: e.target.value as 'single' | 'double' })}
-                  className="px-2 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                  className="min-w-0 px-2 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
                 >
                   <option value="single">Single</option>
                   <option value="double">Double</option>
                 </select>
-                <input
-                  type="number"
+                <NumberInput
                   min={1}
                   value={w.usableSqFtPerRoll}
-                  onChange={(e) => updateWallcovering(w.id, { usableSqFtPerRoll: +e.target.value || 0 })}
-                  className="px-2 py-2 border border-igc-line rounded-md text-sm text-right focus:outline-none focus:border-igc-purple"
+                  onChange={(v) => updateWallcovering(w.id, { usableSqFtPerRoll: v })}
                 />
-                <div className="flex items-center gap-1">
-                  <span className="text-igc-muted text-sm">$</span>
-                  <input
-                    type="number"
-                    min={0}
-                    step={5}
-                    value={w.costPerRoll}
-                    onChange={(e) => updateWallcovering(w.id, { costPerRoll: +e.target.value || 0 })}
-                    className="flex-1 px-2 py-2 border border-igc-line rounded-md text-sm text-right focus:outline-none focus:border-igc-purple"
-                  />
-                </div>
-                <div className="flex items-center gap-1">
-                  <input
-                    type="number"
-                    min={0}
-                    max={50}
-                    value={w.patternWastePct}
-                    onChange={(e) => updateWallcovering(w.id, { patternWastePct: +e.target.value || 0 })}
-                    className="flex-1 px-2 py-2 border border-igc-line rounded-md text-sm text-right focus:outline-none focus:border-igc-purple"
-                  />
-                  <span className="text-xs text-igc-muted">%</span>
-                </div>
+                <MoneyInput
+                  step={5}
+                  value={w.costPerRoll}
+                  onChange={(v) => updateWallcovering(w.id, { costPerRoll: v })}
+                />
+                <UnitInput
+                  unit="%"
+                  min={0}
+                  max={50}
+                  value={w.patternWastePct}
+                  onChange={(v) => updateWallcovering(w.id, { patternWastePct: v })}
+                />
                 <button
                   onClick={() => removeWallcovering(w.id)}
-                  className="text-igc-muted hover:text-red-500 text-lg"
-                  title="Remove"
+                  disabled={catalog.wallcoverings.length <= 1}
+                  className="text-igc-muted hover:text-red-500 text-lg leading-none disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:text-igc-muted"
+                  title={catalog.wallcoverings.length <= 1 ? 'At least one wallcovering is required' : 'Remove'}
                 >
                   ×
                 </button>
@@ -232,56 +215,48 @@ export default function CatalogEditor() {
         </div>
 
         <div className="p-4">
-          <div className="grid grid-cols-[1.2fr_1.2fr_100px_100px_40px] gap-2 text-[10px] font-medium text-igc-muted uppercase tracking-wider px-2 pb-2">
+          <div className="grid grid-cols-[minmax(0,1.2fr)_minmax(0,1.2fr)_140px_140px_32px] gap-4 text-[10px] font-medium text-igc-muted uppercase tracking-wider px-3 pb-2">
             <div>Name</div>
             <div>Description</div>
-            <div className="text-right">Material/sf</div>
-            <div className="text-right">Labor/sf</div>
+            <div>Material / sf</div>
+            <div>Labor / sf</div>
             <div></div>
           </div>
 
           <div className="space-y-2">
             {catalog.muralStyles.map((s) => (
-              <div key={s.id} className="grid grid-cols-[1.2fr_1.2fr_100px_100px_40px] gap-2 items-center">
+              <div
+                key={s.id}
+                className="grid grid-cols-[minmax(0,1.2fr)_minmax(0,1.2fr)_140px_140px_32px] gap-4 items-center"
+              >
                 <input
                   type="text"
                   value={s.name}
                   onChange={(e) => updateMuralStyle(s.id, { name: e.target.value })}
-                  className="px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                  className="min-w-0 px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
                 />
                 <input
                   type="text"
                   value={s.description}
                   onChange={(e) => updateMuralStyle(s.id, { description: e.target.value })}
                   placeholder="Short description"
-                  className="px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                  className="min-w-0 px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
                 />
-                <div className="flex items-center gap-1">
-                  <span className="text-igc-muted text-sm">$</span>
-                  <input
-                    type="number"
-                    step={0.5}
-                    min={0}
-                    value={s.materialPerSqFt}
-                    onChange={(e) => updateMuralStyle(s.id, { materialPerSqFt: +e.target.value || 0 })}
-                    className="flex-1 px-2 py-2 border border-igc-line rounded-md text-sm text-right focus:outline-none focus:border-igc-purple"
-                  />
-                </div>
-                <div className="flex items-center gap-1">
-                  <span className="text-igc-muted text-sm">$</span>
-                  <input
-                    type="number"
-                    step={0.5}
-                    min={0}
-                    value={s.laborPerSqFt}
-                    onChange={(e) => updateMuralStyle(s.id, { laborPerSqFt: +e.target.value || 0 })}
-                    className="flex-1 px-2 py-2 border border-igc-line rounded-md text-sm text-right focus:outline-none focus:border-igc-purple"
-                  />
-                </div>
+                <MoneyInput
+                  step={0.5}
+                  value={s.materialPerSqFt}
+                  onChange={(v) => updateMuralStyle(s.id, { materialPerSqFt: v })}
+                />
+                <MoneyInput
+                  step={0.5}
+                  value={s.laborPerSqFt}
+                  onChange={(v) => updateMuralStyle(s.id, { laborPerSqFt: v })}
+                />
                 <button
                   onClick={() => removeMuralStyle(s.id)}
-                  className="text-igc-muted hover:text-red-500 text-lg"
-                  title="Remove"
+                  disabled={catalog.muralStyles.length <= 1}
+                  className="text-igc-muted hover:text-red-500 text-lg leading-none disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:text-igc-muted"
+                  title={catalog.muralStyles.length <= 1 ? 'At least one mural style is required' : 'Remove'}
                 >
                   ×
                 </button>
@@ -302,6 +277,70 @@ export default function CatalogEditor() {
           Reset everything to defaults
         </button>
       </div>
+    </div>
+  )
+}
+
+type NumberFieldProps = {
+  value: number
+  onChange: (v: number) => void
+  step?: number
+  min?: number
+  max?: number
+}
+
+function NumberInput({ value, onChange, step = 1, min = 0, max }: NumberFieldProps) {
+  return (
+    <input
+      type="number"
+      step={step}
+      min={min}
+      max={max}
+      value={value}
+      onChange={(e) => onChange(+e.target.value || 0)}
+      className="w-full min-w-0 px-3 py-2 border border-igc-line rounded-md text-sm text-right tabular-nums focus:outline-none focus:border-igc-purple"
+    />
+  )
+}
+
+function MoneyInput({ value, onChange, step = 0.25 }: NumberFieldProps) {
+  return (
+    <div className="relative">
+      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-igc-muted text-sm pointer-events-none">$</span>
+      <input
+        type="number"
+        step={step}
+        min={0}
+        value={value}
+        onChange={(e) => onChange(+e.target.value || 0)}
+        className="w-full min-w-0 pl-7 pr-3 py-2 border border-igc-line rounded-md text-sm text-right tabular-nums focus:outline-none focus:border-igc-purple"
+      />
+    </div>
+  )
+}
+
+function UnitInput({
+  value,
+  onChange,
+  unit,
+  step = 1,
+  min = 0,
+  max,
+}: NumberFieldProps & { unit: string }) {
+  return (
+    <div className="relative">
+      <input
+        type="number"
+        step={step}
+        min={min}
+        max={max}
+        value={value}
+        onChange={(e) => onChange(+e.target.value || 0)}
+        className="w-full min-w-0 pl-3 pr-9 py-2 border border-igc-line rounded-md text-sm text-right tabular-nums focus:outline-none focus:border-igc-purple"
+      />
+      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-igc-muted pointer-events-none">
+        {unit}
+      </span>
     </div>
   )
 }

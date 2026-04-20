@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useEstimate } from '../estimate/EstimateContext'
 import { useCatalog } from '../catalog/CatalogContext'
 
@@ -60,6 +60,12 @@ export default function FilmCalculator() {
     oldFilmRemoval: false,
   })
 
+  useEffect(() => {
+    if (films.length > 0 && !films.some((f) => f.id === filmId)) {
+      setFilmId(films[0].id)
+    }
+  }, [films, filmId])
+
   const film = films.find((f) => f.id === filmId) ?? films[0] ?? FALLBACK_FILM
 
   const calc = useMemo(() => {
@@ -68,8 +74,9 @@ export default function FilmCalculator() {
     const wasteAdjustedSqFt = totalSqFt * (1 + wastePct / 100)
 
     const widestWindowIn = windows.reduce((m, w) => Math.max(m, w.widthIn), 0)
-    const rollWidthAdequate = widestWindowIn <= film.rollWidthIn
-    const recommendedRollFt = wasteAdjustedSqFt * (12 / film.rollWidthIn)
+    const safeRollWidth = Math.max(1, film.rollWidthIn)
+    const rollWidthAdequate = widestWindowIn <= safeRollWidth
+    const recommendedRollFt = wasteAdjustedSqFt * (12 / safeRollWidth)
 
     const laborMultiplier = (Object.keys(flags) as Array<keyof ComplexityFlags>).reduce(
       (m, k) => (flags[k] ? m * COMPLEXITY_MULTIPLIERS[k].labor : m),

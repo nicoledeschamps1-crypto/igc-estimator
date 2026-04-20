@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useEstimate } from '../estimate/EstimateContext'
 import { useCatalog } from '../catalog/CatalogContext'
 
@@ -50,6 +50,12 @@ export default function MuralCalculator() {
   const [markupPct, setMarkupPct] = useState<number>(35)
   const [taxPct, setTaxPct] = useState<number>(7)
   const [projectType, setProjectType] = useState<ProjectType>('residential')
+
+  useEffect(() => {
+    if (muralStyles.length > 0 && !muralStyles.some((s) => s.id === styleId)) {
+      setStyleId(muralStyles[0].id)
+    }
+  }, [muralStyles, styleId])
 
   const style = muralStyles.find((s) => s.id === styleId) ?? muralStyles[0] ?? FALLBACK_STYLE
   const accessMult = ACCESS_MULTIPLIERS[access].labor

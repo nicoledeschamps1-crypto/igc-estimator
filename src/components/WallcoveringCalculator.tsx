@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useEstimate } from '../estimate/EstimateContext'
 import { useCatalog } from '../catalog/CatalogContext'
 
@@ -57,6 +57,12 @@ export default function WallcoveringCalculator() {
   const [prep, setPrep] = useState<PrepItem[]>(DEFAULT_PREP_ITEMS.map((p) => ({ ...p, id: uid() })))
   const [clientSuppliesMaterial, setClientSuppliesMaterial] = useState<boolean>(false)
 
+  useEffect(() => {
+    if (wallcoverings.length > 0 && !wallcoverings.some((w) => w.id === materialId)) {
+      setMaterialId(wallcoverings[0].id)
+    }
+  }, [wallcoverings, materialId])
+
   const material = wallcoverings.find((m) => m.id === materialId) ?? wallcoverings[0] ?? FALLBACK_WALLCOVERING
 
   const calc = useMemo(() => {
@@ -65,7 +71,8 @@ export default function WallcoveringCalculator() {
     const netWallSqFt = Math.max(0, grossWallSqFt - openingsSqFt)
     const totalWastePct = material.patternWastePct + extraWastePct
     const wasteAdjustedSqFt = netWallSqFt * (1 + totalWastePct / 100)
-    const rollsNeeded = Math.ceil(wasteAdjustedSqFt / material.usableSqFtPerRoll)
+    const safeSfPerRoll = Math.max(1, material.usableSqFtPerRoll)
+    const rollsNeeded = Math.ceil(wasteAdjustedSqFt / safeSfPerRoll)
 
     const materialCost = clientSuppliesMaterial ? 0 : rollsNeeded * material.costPerRoll
     const laborCost = netWallSqFt * laborPerSqFt
