@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Sun, Moon, Compass } from 'lucide-react'
 import FilmCalculator from './components/FilmCalculator'
 import WallcoveringCalculator from './components/WallcoveringCalculator'
 import MuralCalculator from './components/MuralCalculator'
@@ -54,9 +55,7 @@ function AppShell() {
       <header className="border-b border-igc-line bg-igc-surface">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-md bg-igc-purple flex items-center justify-center text-white font-bold text-sm">
-              IGC
-            </div>
+            <HeaderLogo />
             <div>
               <div className="text-sm font-semibold text-igc-ink">IGC Estimator</div>
               <div className="text-xs text-igc-muted">{active.sublabel}</div>
@@ -65,13 +64,14 @@ function AppShell() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setTourOpen(true)}
-              className="px-3 py-1.5 text-xs border border-igc-line rounded-md text-igc-muted hover:text-igc-ink hover:border-igc-purple"
+              className="px-3 py-1.5 text-xs border border-igc-line rounded-md text-igc-muted hover:text-igc-ink hover:border-igc-accent inline-flex items-center gap-1.5"
               title="Replay the onboarding tour"
             >
-              Tour
+              <Compass size={14} strokeWidth={1.75} />
+              <span className="hidden sm:inline">Tour</span>
             </button>
             <ThemeToggle />
-            <div className="text-xs text-igc-muted">v0.7 · prototype</div>
+            <div className="text-xs text-igc-muted">v0.8 · prototype</div>
           </div>
         </div>
 
@@ -88,7 +88,7 @@ function AppShell() {
                     onClick={() => setTab(t.id)}
                     className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
                       isActive
-                        ? 'border-igc-purple text-igc-purple'
+                        ? 'border-igc-accent text-igc-accent'
                         : 'border-transparent text-igc-muted hover:text-igc-ink'
                     }`}
                   >
@@ -151,12 +151,30 @@ function ThemeToggle() {
   return (
     <button
       onClick={toggle}
-      className="px-3 py-1.5 text-xs border border-igc-line rounded-md text-igc-muted hover:text-igc-ink hover:border-igc-purple flex items-center gap-1.5"
+      className="px-3 py-1.5 text-xs border border-igc-line rounded-md text-igc-muted hover:text-igc-ink hover:border-igc-accent flex items-center gap-1.5"
       title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
     >
-      <span>{theme === 'dark' ? '☀︎' : '☾'}</span>
+      {theme === 'dark' ? <Sun size={14} strokeWidth={1.75} /> : <Moon size={14} strokeWidth={1.75} />}
       <span className="hidden sm:inline">{theme === 'dark' ? 'Light' : 'Dark'}</span>
     </button>
+  )
+}
+
+function HeaderLogo() {
+  const { brand } = useEstimate()
+  if (brand.logoDataUrl) {
+    return (
+      <img
+        src={brand.logoDataUrl}
+        alt={brand.companyName}
+        className="w-8 h-8 object-contain rounded-md bg-igc-surface dark:bg-white border border-igc-line"
+      />
+    )
+  }
+  return (
+    <div className="w-8 h-8 rounded-md bg-igc-accent flex items-center justify-center text-white font-bold text-sm">
+      IGC
+    </div>
   )
 }
 
@@ -164,7 +182,7 @@ function EstimateBadge() {
   const { quotes } = useEstimate()
   if (quotes.length === 0) return null
   return (
-    <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-igc-purple text-white text-[10px] font-semibold">
+    <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-igc-accent text-white text-[10px] font-semibold">
       {quotes.length}
     </span>
   )
@@ -174,7 +192,7 @@ function PipelineBadge() {
   const { savedEstimates } = useEstimate()
   if (savedEstimates.length === 0) return null
   return (
-    <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-igc-purple-light text-igc-purple text-[10px] font-semibold">
+    <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-igc-accent-light text-igc-accent text-[10px] font-semibold">
       {savedEstimates.length}
     </span>
   )

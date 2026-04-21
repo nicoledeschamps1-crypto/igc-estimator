@@ -129,7 +129,7 @@ export default function FilmCalculator() {
             <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted">Windows</h2>
             <button
               onClick={addWindow}
-              className="text-sm text-igc-purple hover:text-igc-purple-dark font-medium"
+              className="text-sm text-igc-accent hover:text-igc-accent-dark font-medium"
             >
               + Add window group
             </button>
@@ -151,28 +151,28 @@ export default function FilmCalculator() {
                   placeholder="e.g. Conference rm"
                   value={w.label}
                   onChange={(e) => updateWindow(w.id, { label: e.target.value })}
-                  className="px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                  className="px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-accent"
                 />
                 <input
                   type="number"
                   min={1}
                   value={w.qty}
                   onChange={(e) => updateWindow(w.id, { qty: +e.target.value || 0 })}
-                  className="px-2 py-2 border border-igc-line rounded-md text-sm text-right focus:outline-none focus:border-igc-purple"
+                  className="px-2 py-2 border border-igc-line rounded-md text-sm text-right focus:outline-none focus:border-igc-accent"
                 />
                 <input
                   type="number"
                   min={1}
                   value={w.widthIn}
                   onChange={(e) => updateWindow(w.id, { widthIn: +e.target.value || 0 })}
-                  className="px-2 py-2 border border-igc-line rounded-md text-sm text-right focus:outline-none focus:border-igc-purple"
+                  className="px-2 py-2 border border-igc-line rounded-md text-sm text-right focus:outline-none focus:border-igc-accent"
                 />
                 <input
                   type="number"
                   min={1}
                   value={w.heightIn}
                   onChange={(e) => updateWindow(w.id, { heightIn: +e.target.value || 0 })}
-                  className="px-2 py-2 border border-igc-line rounded-md text-sm text-right focus:outline-none focus:border-igc-purple"
+                  className="px-2 py-2 border border-igc-line rounded-md text-sm text-right focus:outline-none focus:border-igc-accent"
                 />
                 <button
                   onClick={() => removeWindow(w.id)}
@@ -195,7 +195,7 @@ export default function FilmCalculator() {
               <select
                 value={filmId}
                 onChange={(e) => setFilmId(e.target.value)}
-                className="w-full px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                className="w-full px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-accent"
               >
                 {films.map((f) => (
                   <option key={f.id} value={f.id}>
@@ -215,7 +215,7 @@ export default function FilmCalculator() {
                     max={30}
                     value={wastePct}
                     onChange={(e) => setWastePct(+e.target.value)}
-                    className="flex-1 accent-igc-purple"
+                    className="flex-1 accent-igc-accent"
                   />
                   <span className="text-sm font-mono w-10 text-right">{wastePct}%</span>
                 </div>
@@ -230,7 +230,7 @@ export default function FilmCalculator() {
                     step={0.25}
                     value={laborPerSqFt}
                     onChange={(e) => setLaborPerSqFt(+e.target.value || 0)}
-                    className="flex-1 px-2 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                    className="flex-1 px-2 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-accent"
                   />
                 </div>
               </div>
@@ -244,7 +244,7 @@ export default function FilmCalculator() {
                     max={100}
                     value={markupPct}
                     onChange={(e) => setMarkupPct(+e.target.value)}
-                    className="flex-1 accent-igc-purple"
+                    className="flex-1 accent-igc-accent"
                   />
                   <span className="text-sm font-mono w-10 text-right">{markupPct}%</span>
                 </div>
@@ -258,7 +258,7 @@ export default function FilmCalculator() {
                     step={0.125}
                     value={taxPct}
                     onChange={(e) => setTaxPct(+e.target.value || 0)}
-                    className="flex-1 px-2 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                    className="flex-1 px-2 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-accent"
                   />
                   <span className="text-igc-muted text-sm">%</span>
                 </div>
@@ -275,15 +275,15 @@ export default function FilmCalculator() {
                 key={key}
                 className={`flex items-center gap-2 px-3 py-2 rounded-md border cursor-pointer text-sm ${
                   flags[key]
-                    ? 'bg-igc-purple-light border-igc-purple text-igc-ink'
-                    : 'bg-igc-surface border-igc-line text-igc-ink hover:border-igc-purple'
+                    ? 'bg-igc-accent-light border-igc-accent text-igc-ink'
+                    : 'bg-igc-surface border-igc-line text-igc-ink hover:border-igc-accent'
                 }`}
               >
                 <input
                   type="checkbox"
                   checked={flags[key]}
                   onChange={(e) => setFlags((f) => ({ ...f, [key]: e.target.checked }))}
-                  className="accent-igc-purple"
+                  className="accent-igc-accent"
                 />
                 <span>{COMPLEXITY_MULTIPLIERS[key].label}</span>
               </label>
@@ -334,7 +334,7 @@ export default function FilmCalculator() {
               <SummaryRow label={`Tax (${taxPct}%)`} value={fmtCurrency(calc.tax)} muted />
             </div>
 
-            <div className="border-t-2 border-igc-purple mt-4 pt-4">
+            <div className="border-t-2 border-igc-accent mt-4 pt-4">
               <div className="flex items-baseline justify-between">
                 <span className="text-xs uppercase tracking-wider text-igc-muted">Total</span>
                 <span className="text-2xl font-semibold text-igc-ink">{fmtCurrency(calc.total)}</span>
@@ -359,7 +359,7 @@ export default function FilmCalculator() {
                   ],
                 })
               }}
-              className="mt-4 w-full px-4 py-2.5 bg-igc-purple hover:bg-igc-purple-dark text-white rounded-md text-sm font-medium transition-colors"
+              className="mt-4 w-full px-4 py-2.5 bg-igc-accent hover:bg-igc-accent-dark text-white rounded-md text-sm font-medium transition-colors"
             >
               + Add to estimate
             </button>

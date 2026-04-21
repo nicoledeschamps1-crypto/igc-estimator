@@ -1,68 +1,81 @@
 import { useEffect, useState } from 'react'
+import {
+  HandMetal,
+  Blinds,
+  Wallpaper,
+  Palette,
+  Sparkles,
+  FileText,
+  LayoutList,
+  BookOpen,
+  Map,
+  Rocket,
+  type LucideIcon,
+} from 'lucide-react'
 
 type TourStep = {
   targetTab?: string
   title: string
   body: string
-  emoji: string
+  Icon: LucideIcon
 }
 
 const STEPS: TourStep[] = [
   {
-    emoji: '👋',
+    Icon: HandMetal,
     title: 'Welcome, Papi',
     body: 'Nicole built this just for IGC Studio. It replaces the guesswork when you quote window film, wallcovering, or mural work. Takes about 2 minutes to walk through.',
   },
   {
     targetTab: 'film',
-    emoji: '🪟',
+    Icon: Blinds,
     title: 'Window Film',
     body: 'Add each window group (e.g. "Conference room · 12 windows · 48×60"). Pick the film type, tweak the waste factor and markup, check complexity boxes for arched glass, ladders, etc. Live price updates on the right.',
   },
   {
     targetTab: 'wallcovering',
-    emoji: '🖼️',
+    Icon: Wallpaper,
     title: 'Wallcovering',
     body: 'Enter perimeter × height, subtract openings. Pick single or double roll, add surface prep (skim coat, primer, old paper removal). Toggle whether client buys material — then you quote labor only.',
   },
   {
     targetTab: 'mural',
-    emoji: '🎨',
+    Icon: Palette,
     title: 'Mural',
     body: 'Four complexity tiers from flat color to full signature pieces. Access multiplier for ladder or lift. Design fee option. Deposit schedule set for 50/50 residential or 33/33/33 commercial.',
   },
   {
     targetTab: 'ai',
-    emoji: '✨',
+    Icon: Sparkles,
     title: 'AI Draft',
     body: 'Paste the client\'s scope text (email, RFP, meeting notes). Claude drafts rough line items and cites the sentence it came from. Accept only the ones you trust, dismiss the rest.',
   },
   {
     targetTab: 'estimate',
-    emoji: '📄',
+    Icon: FileText,
     title: 'Estimate',
     body: 'All line items from the other tabs land here. Fill in client info, see a live PDF preview on the right, and hit "Save to pipeline" or "Download PDF" when ready to send.',
   },
   {
     targetTab: 'pipeline',
-    emoji: '📋',
+    Icon: LayoutList,
     title: 'Pipeline',
     body: 'Every saved estimate lives here. Track status (Draft / Sent / Accepted / Declined), see your revenue forecast and win rate, duplicate past estimates as templates.',
   },
   {
     targetTab: 'catalog',
-    emoji: '💲',
+    Icon: BookOpen,
     title: 'Catalog',
     body: 'Your default product list — film types, wallcovering rolls, mural tiers. Edit names and rates here and every calculator picks up the change. Share your real rate card with Nicole and she\'ll plug it in.',
   },
   {
     targetTab: 'guide',
-    emoji: '🗺️',
+    Icon: Map,
     title: 'Guide',
     body: 'The roadmap, how-it-works, and reference for every section. Come back here any time — and you can replay this tour from the header "Tour" button.',
   },
   {
-    emoji: '🚀',
+    Icon: Rocket,
     title: 'Ready to go',
     body: 'Start on Window Film with the defaults — hit "+ Add to estimate", then switch to Estimate to see it land. Ask Nicole anything. Close this to begin.',
   },
@@ -137,14 +150,16 @@ export default function OnboardingTour({ open, onClose, onNavigate }: Props) {
         {/* Progress */}
         <div className="h-1 bg-igc-line">
           <div
-            className="h-full bg-igc-purple transition-all duration-300"
+            className="h-full bg-igc-accent transition-all duration-300"
             style={{ width: `${((stepIdx + 1) / STEPS.length) * 100}%` }}
           />
         </div>
 
         <div className="p-6 sm:p-8">
           <div className="flex items-start gap-4 mb-4">
-            <div className="text-4xl">{step.emoji}</div>
+            <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-igc-accent-light text-igc-accent flex items-center justify-center">
+              <step.Icon size={26} strokeWidth={1.75} />
+            </div>
             <div className="flex-1 min-w-0">
               <div className="text-[11px] uppercase tracking-wider text-igc-muted font-semibold mb-1">
                 Step {stepIdx + 1} of {STEPS.length}
@@ -165,14 +180,14 @@ export default function OnboardingTour({ open, onClose, onNavigate }: Props) {
               {!isFirst && (
                 <button
                   onClick={back}
-                  className="px-4 py-2 text-sm text-igc-ink border border-igc-line rounded-md hover:border-igc-purple"
+                  className="px-4 py-2 text-sm text-igc-ink border border-igc-line rounded-md hover:border-igc-accent"
                 >
                   Back
                 </button>
               )}
               <button
                 onClick={next}
-                className="px-5 py-2 bg-igc-purple hover:bg-igc-purple-dark text-white rounded-md text-sm font-medium"
+                className="px-5 py-2 bg-igc-accent hover:bg-igc-accent-dark text-white rounded-md text-sm font-medium"
               >
                 {isLast ? "Let's go" : 'Next →'}
               </button>

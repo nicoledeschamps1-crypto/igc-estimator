@@ -36,7 +36,7 @@ export default function PdfPreview() {
         <div className="text-[10px] text-igc-muted">
           {stale ? (
             <span className="flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-igc-purple animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-igc-accent animate-pulse" />
               updating…
             </span>
           ) : (

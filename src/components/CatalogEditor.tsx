@@ -22,7 +22,7 @@ export default function CatalogEditor() {
 
   return (
     <div className="space-y-6 max-w-5xl">
-      <section className="bg-igc-purple-light border border-igc-purple/30 rounded-lg p-5">
+      <section className="bg-igc-accent-light border border-igc-accent/30 rounded-lg p-5">
         <div className="flex items-start gap-3">
           <div className="text-2xl">💰</div>
           <div>
@@ -48,7 +48,7 @@ export default function CatalogEditor() {
           <div className="flex gap-2">
             <button
               onClick={addFilm}
-              className="px-3 py-1.5 text-xs text-igc-purple hover:text-igc-purple-dark font-medium"
+              className="px-3 py-1.5 text-xs text-igc-accent hover:text-igc-accent-dark font-medium"
             >
               + Add film type
             </button>
@@ -76,7 +76,7 @@ export default function CatalogEditor() {
                   type="text"
                   value={f.name}
                   onChange={(e) => updateFilm(f.id, { name: e.target.value })}
-                  className="min-w-0 px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                  className="min-w-0 px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-accent"
                 />
                 <UnitInput
                   unit="in"
@@ -115,7 +115,7 @@ export default function CatalogEditor() {
           <div className="flex gap-2">
             <button
               onClick={addWallcovering}
-              className="px-3 py-1.5 text-xs text-igc-purple hover:text-igc-purple-dark font-medium"
+              className="px-3 py-1.5 text-xs text-igc-accent hover:text-igc-accent-dark font-medium"
             >
               + Add wallcovering
             </button>
@@ -148,12 +148,12 @@ export default function CatalogEditor() {
                   type="text"
                   value={w.name}
                   onChange={(e) => updateWallcovering(w.id, { name: e.target.value })}
-                  className="min-w-0 px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                  className="min-w-0 px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-accent"
                 />
                 <select
                   value={w.rollType}
                   onChange={(e) => updateWallcovering(w.id, { rollType: e.target.value as 'single' | 'double' })}
-                  className="min-w-0 px-2 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                  className="min-w-0 px-2 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-accent"
                 >
                   <option value="single">Single</option>
                   <option value="double">Double</option>
@@ -201,7 +201,7 @@ export default function CatalogEditor() {
           <div className="flex gap-2">
             <button
               onClick={addMuralStyle}
-              className="px-3 py-1.5 text-xs text-igc-purple hover:text-igc-purple-dark font-medium"
+              className="px-3 py-1.5 text-xs text-igc-accent hover:text-igc-accent-dark font-medium"
             >
               + Add style
             </button>
@@ -233,14 +233,14 @@ export default function CatalogEditor() {
                   type="text"
                   value={s.name}
                   onChange={(e) => updateMuralStyle(s.id, { name: e.target.value })}
-                  className="min-w-0 px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                  className="min-w-0 px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-accent"
                 />
                 <input
                   type="text"
                   value={s.description}
                   onChange={(e) => updateMuralStyle(s.id, { description: e.target.value })}
                   placeholder="Short description"
-                  className="min-w-0 px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                  className="min-w-0 px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-accent"
                 />
                 <MoneyInput
                   step={0.5}
@@ -298,7 +298,7 @@ function NumberInput({ value, onChange, step = 1, min = 0, max }: NumberFieldPro
       max={max}
       value={value}
       onChange={(e) => onChange(+e.target.value || 0)}
-      className="w-full min-w-0 px-3 py-2 border border-igc-line rounded-md text-sm text-right tabular-nums focus:outline-none focus:border-igc-purple"
+      className="w-full min-w-0 px-3 py-2 border border-igc-line rounded-md text-sm text-right tabular-nums focus:outline-none focus:border-igc-accent"
     />
   )
 }
@@ -313,7 +313,7 @@ function MoneyInput({ value, onChange, step = 0.25 }: NumberFieldProps) {
         min={0}
         value={value}
         onChange={(e) => onChange(+e.target.value || 0)}
-        className="w-full min-w-0 pl-7 pr-3 py-2 border border-igc-line rounded-md text-sm text-right tabular-nums focus:outline-none focus:border-igc-purple"
+        className="w-full min-w-0 pl-7 pr-3 py-2 border border-igc-line rounded-md text-sm text-right tabular-nums focus:outline-none focus:border-igc-accent"
       />
     </div>
   )
@@ -336,7 +336,7 @@ function UnitInput({
         max={max}
         value={value}
         onChange={(e) => onChange(+e.target.value || 0)}
-        className="w-full min-w-0 pl-3 pr-9 py-2 border border-igc-line rounded-md text-sm text-right tabular-nums focus:outline-none focus:border-igc-purple"
+        className="w-full min-w-0 pl-3 pr-9 py-2 border border-igc-line rounded-md text-sm text-right tabular-nums focus:outline-none focus:border-igc-accent"
       />
       <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-igc-muted pointer-events-none">
         {unit}

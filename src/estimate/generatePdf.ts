@@ -8,10 +8,10 @@ const TRADE_LABELS: Record<TradeKind, string> = {
   mural: 'MURAL',
 }
 
-const BRAND_PURPLE: [number, number, number] = [139, 69, 232]
-const INK: [number, number, number] = [26, 26, 26]
-const MUTED: [number, number, number] = [107, 107, 107]
-const LINE: [number, number, number] = [230, 224, 240]
+const BRAND_ACCENT: [number, number, number] = [9, 85, 166] // IGC cobalt #0955A6
+const INK: [number, number, number] = [51, 51, 51] // IGC body text #333333
+const MUTED: [number, number, number] = [105, 114, 125] // IGC secondary #69727D
+const LINE: [number, number, number] = [224, 220, 213] // warm stone
 
 function fmtCurrency(n: number) {
   return n.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
@@ -84,8 +84,8 @@ export function buildPdfDoc(
   }
   doc.text(fmtDateLong(client.dateIso), pageWidth - margin, margin + 36, { align: 'right' })
 
-  // Purple accent line
-  doc.setDrawColor(...BRAND_PURPLE)
+  // Brand accent line
+  doc.setDrawColor(...BRAND_ACCENT)
   doc.setLineWidth(1.5)
   doc.line(margin, margin + 48, pageWidth - margin, margin + 48)
 
@@ -133,7 +133,7 @@ export function buildPdfDoc(
 
       doc.setFont('helvetica', 'bold')
       doc.setFontSize(8)
-      doc.setTextColor(...BRAND_PURPLE)
+      doc.setTextColor(...BRAND_ACCENT)
       doc.text(TRADE_LABELS[q.trade], margin, y)
 
       doc.setFont('helvetica', 'normal')
@@ -204,7 +204,7 @@ export function buildPdfDoc(
     y = margin
   }
 
-  doc.setDrawColor(...BRAND_PURPLE)
+  doc.setDrawColor(...BRAND_ACCENT)
   doc.setLineWidth(1.5)
   doc.line(margin, y, pageWidth - margin, y)
 

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { FolderOpen, Inbox } from 'lucide-react'
 import { useEstimate, EstimateStatus, SavedEstimate } from '../estimate/EstimateContext'
 
 type StatusFilter = 'all' | EstimateStatus
@@ -11,10 +12,10 @@ const STATUS_LABELS: Record<EstimateStatus, string> = {
 }
 
 const STATUS_COLORS: Record<EstimateStatus, string> = {
-  draft: 'bg-slate-100 text-slate-700 border-slate-200',
-  sent: 'bg-blue-100 text-blue-800 border-blue-200',
-  accepted: 'bg-emerald-100 text-emerald-800 border-emerald-200',
-  declined: 'bg-rose-100 text-rose-800 border-rose-200',
+  draft: 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700',
+  sent: 'bg-blue-100 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-800/60',
+  accepted: 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/60',
+  declined: 'bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 border-rose-200 dark:border-rose-800/60',
 }
 
 const STATUS_ORDER: EstimateStatus[] = ['draft', 'sent', 'accepted', 'declined']
@@ -97,7 +98,7 @@ export default function PipelinePanel({ onOpenEstimate }: PipelinePanelProps) {
           label="Forecast"
           sub="Sent + Accepted"
           value={fmtCurrency(stats.forecast)}
-          accent="text-igc-purple"
+          accent="text-igc-accent"
         />
         <DashCard
           label="Accepted"
@@ -133,7 +134,7 @@ export default function PipelinePanel({ onOpenEstimate }: PipelinePanelProps) {
         </div>
         <button
           onClick={handleNew}
-          className="px-4 py-2 bg-igc-purple hover:bg-igc-purple-dark text-white rounded-md text-sm font-medium transition-colors"
+          className="px-4 py-2 bg-igc-accent hover:bg-igc-accent-dark text-white rounded-md text-sm font-medium transition-colors"
         >
           + New estimate
         </button>
@@ -204,8 +205,8 @@ function FilterChip({
       onClick={onClick}
       className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
         active
-          ? 'bg-igc-purple text-white border-igc-purple'
-          : 'bg-igc-surface text-igc-muted border-igc-line hover:border-igc-purple hover:text-igc-ink'
+          ? 'bg-igc-accent text-white border-igc-accent'
+          : 'bg-igc-surface text-igc-muted border-igc-line hover:border-igc-accent hover:text-igc-ink'
       }`}
     >
       {children}
@@ -238,12 +239,12 @@ function EstimateRow({
       : estimate.client.address || `${estimate.quotes.length} line items`
 
   return (
-    <li className={`px-4 py-3 flex items-start gap-4 hover:bg-igc-purple-light/40 transition-colors ${isCurrent ? 'bg-igc-purple-light/50' : ''}`}>
+    <li className={`px-4 py-3 flex items-start gap-4 hover:bg-igc-accent-light/40 transition-colors ${isCurrent ? 'bg-igc-accent-light/50' : ''}`}>
       <div className="flex-1 min-w-0 cursor-pointer" onClick={onOpen}>
         <div className="flex items-center gap-2 mb-0.5 flex-wrap">
           <span className="font-medium text-sm text-igc-ink truncate">{title}</span>
           {isCurrent && (
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-igc-purple text-white uppercase tracking-wider font-semibold">
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-igc-accent text-white uppercase tracking-wider font-semibold">
               Open
             </span>
           )}
@@ -265,7 +266,7 @@ function EstimateRow({
         value={estimate.status}
         onChange={(e) => onStatusChange(e.target.value as EstimateStatus)}
         onClick={(e) => e.stopPropagation()}
-        className={`text-[11px] font-medium px-2 py-1 rounded-full border cursor-pointer focus:outline-none focus:ring-2 focus:ring-igc-purple/30 ${STATUS_COLORS[estimate.status]}`}
+        className={`text-[11px] font-medium px-2 py-1 rounded-full border cursor-pointer focus:outline-none focus:ring-2 focus:ring-igc-accent/30 ${STATUS_COLORS[estimate.status]}`}
       >
         {STATUS_ORDER.map((s) => (
           <option key={s} value={s}>
@@ -277,7 +278,7 @@ function EstimateRow({
       <div className="flex flex-col gap-1 flex-shrink-0">
         <button
           onClick={onOpen}
-          className="text-[11px] text-igc-purple hover:text-igc-purple-dark font-medium"
+          className="text-[11px] text-igc-accent hover:text-igc-accent-dark font-medium"
         >
           Open
         </button>
@@ -310,7 +311,7 @@ function EmptyState({
   if (hasAny && filter !== 'all') {
     return (
       <div className="text-center py-12 px-6">
-        <div className="text-4xl mb-3">🗂️</div>
+        <FolderOpen size={40} strokeWidth={1.5} className="mx-auto mb-3 text-igc-muted" />
         <div className="text-sm text-igc-ink font-medium">No {STATUS_LABELS[filter].toLowerCase()} estimates</div>
         <div className="text-xs text-igc-muted mt-1">Change the filter to see the rest.</div>
       </div>
@@ -318,7 +319,7 @@ function EmptyState({
   }
   return (
     <div className="text-center py-14 px-6">
-      <div className="text-4xl mb-3">📋</div>
+      <Inbox size={48} strokeWidth={1.5} className="mx-auto mb-3 text-igc-muted" />
       <div className="text-sm text-igc-ink font-medium mb-1">No saved estimates yet</div>
       <div className="text-xs text-igc-muted mb-4 max-w-md mx-auto">
         Build line items in Window Film, Wallcovering, or Mural, then save from the Estimate tab.
@@ -326,7 +327,7 @@ function EmptyState({
       </div>
       <button
         onClick={onNew}
-        className="px-4 py-2 bg-igc-purple hover:bg-igc-purple-dark text-white rounded-md text-sm font-medium"
+        className="px-4 py-2 bg-igc-accent hover:bg-igc-accent-dark text-white rounded-md text-sm font-medium"
       >
         + Start a new estimate
       </button>

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Sparkles, CheckCircle2, CircleDot, AlertTriangle, type LucideIcon } from 'lucide-react'
 import { useCatalog } from '../catalog/CatalogContext'
 import { useEstimate, TradeKind } from '../estimate/EstimateContext'
 
@@ -22,15 +23,15 @@ const TRADE_LABEL: Record<TradeKind, string> = {
 }
 
 const TRADE_BADGE: Record<TradeKind, string> = {
-  film: 'bg-blue-100 text-blue-800',
-  wallcovering: 'bg-emerald-100 text-emerald-800',
-  mural: 'bg-rose-100 text-rose-800',
+  film: 'bg-blue-100 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300',
+  wallcovering: 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300',
+  mural: 'bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300',
 }
 
-const CONFIDENCE_META: Record<Confidence, { label: string; chip: string; icon: string }> = {
-  high: { label: 'High confidence', chip: 'bg-emerald-50 text-emerald-800 border-emerald-200', icon: '✓' },
-  medium: { label: 'Medium', chip: 'bg-amber-50 text-amber-800 border-amber-200', icon: '·' },
-  low: { label: 'Low — please verify', chip: 'bg-rose-50 text-rose-800 border-rose-200', icon: '⚠' },
+const CONFIDENCE_META: Record<Confidence, { label: string; chip: string; Icon: LucideIcon }> = {
+  high: { label: 'High confidence', chip: 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/60', Icon: CheckCircle2 },
+  medium: { label: 'Medium', chip: 'bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-800/60', Icon: CircleDot },
+  low: { label: 'Low — please verify', chip: 'bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300 border-rose-200 dark:border-rose-800/60', Icon: AlertTriangle },
 }
 
 const WORKER_URL_KEY = 'igc-worker-url'
@@ -166,9 +167,11 @@ export default function AIDraftPanel() {
   return (
     <div className="max-w-4xl space-y-6">
       {/* Hero */}
-      <section className="bg-gradient-to-br from-igc-purple to-igc-purple-dark text-white rounded-lg p-6">
+      <section className="bg-gradient-to-br from-igc-accent to-igc-accent-dark text-white rounded-lg p-6">
         <div className="flex items-start gap-4">
-          <div className="text-3xl">✨</div>
+          <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-white/15 flex items-center justify-center">
+            <Sparkles size={26} strokeWidth={1.75} />
+          </div>
           <div>
             <h1 className="text-xl font-bold mb-1">AI Draft</h1>
             <p className="text-sm text-white/90 leading-relaxed">
@@ -200,7 +203,7 @@ export default function AIDraftPanel() {
             <label className="text-sm font-semibold text-igc-ink">Client scope text</label>
             <button
               onClick={() => setScope(EXAMPLE_SCOPE)}
-              className="text-xs text-igc-purple hover:text-igc-purple-dark"
+              className="text-xs text-igc-accent hover:text-igc-accent-dark"
             >
               Load example
             </button>
@@ -210,7 +213,7 @@ export default function AIDraftPanel() {
             onChange={(e) => setScope(e.target.value)}
             rows={8}
             placeholder="Paste the client's scope email, meeting notes, or RFP text here…"
-            className="w-full px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple font-mono"
+            className="w-full px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-accent font-mono"
           />
           <div className="text-[11px] text-igc-muted mt-1">{scope.length.toLocaleString()} characters</div>
         </div>
@@ -221,7 +224,7 @@ export default function AIDraftPanel() {
                 <span>Ready · worker at {activeHost}</span>
                 <button
                   onClick={() => setSettingsOpen((s) => !s)}
-                  className="text-igc-purple hover:text-igc-purple-dark underline"
+                  className="text-igc-accent hover:text-igc-accent-dark underline"
                 >
                   {settingsOpen ? 'Hide settings' : 'Change URL'}
                 </button>
@@ -235,7 +238,7 @@ export default function AIDraftPanel() {
           <button
             onClick={runDraft}
             disabled={loading || scope.trim().length < 10 || !activeHost}
-            className="px-5 py-2 bg-igc-purple hover:bg-igc-purple-dark text-white rounded-md text-sm font-medium transition-colors disabled:bg-igc-line disabled:text-igc-muted disabled:cursor-not-allowed"
+            className="px-5 py-2 bg-igc-accent hover:bg-igc-accent-dark text-white rounded-md text-sm font-medium transition-colors disabled:bg-igc-line disabled:text-igc-muted disabled:cursor-not-allowed"
           >
             {loading ? 'Drafting…' : 'Draft estimate'}
           </button>
@@ -257,7 +260,7 @@ export default function AIDraftPanel() {
             </h2>
             <div className="text-xs text-igc-muted">
               {items.length} {items.length === 1 ? 'item' : 'items'} ·{' '}
-              <span className="text-igc-purple font-semibold">{accepted.size} accepted</span> ·{' '}
+              <span className="text-igc-accent font-semibold">{accepted.size} accepted</span> ·{' '}
               {dismissed.size} dismissed
             </div>
           </div>
@@ -304,7 +307,7 @@ function DraftCard({
   return (
     <div
       className={`bg-igc-surface border rounded-lg p-5 transition-colors ${
-        accepted ? 'border-emerald-300 bg-emerald-50/40' : 'border-igc-line hover:border-igc-purple/40'
+        accepted ? 'border-emerald-300 bg-emerald-50/40' : 'border-igc-line hover:border-igc-accent/40'
       }`}
     >
       <div className="flex items-start justify-between gap-4 mb-3">
@@ -312,11 +315,12 @@ function DraftCard({
           <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium uppercase tracking-wider ${TRADE_BADGE[item.trade]}`}>
             {TRADE_LABEL[item.trade]}
           </span>
-          <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium border ${conf.chip}`}>
-            {conf.icon} {conf.label}
+          <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium border inline-flex items-center gap-1 ${conf.chip}`}>
+            <conf.Icon size={11} strokeWidth={2} />
+            {conf.label}
           </span>
           {item.catalogChoice && (
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-igc-purple-light text-igc-purple font-medium">
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-igc-accent-light text-igc-accent font-medium">
               {item.catalogChoice}
             </span>
           )}
@@ -331,7 +335,7 @@ function DraftCard({
         <div className="text-xs text-igc-muted mt-0.5">{item.summary}</div>
       </div>
 
-      <div className="border-l-2 border-igc-purple/30 pl-3 py-1 my-3">
+      <div className="border-l-2 border-igc-accent/30 pl-3 py-1 my-3">
         <div className="text-[10px] uppercase tracking-wider text-igc-muted font-semibold">From scope</div>
         <div className="text-xs text-igc-ink italic">"{item.sourceQuote}"</div>
       </div>
@@ -360,7 +364,7 @@ function DraftCard({
             </button>
             <button
               onClick={onAccept}
-              className="px-4 py-1.5 text-xs bg-igc-purple hover:bg-igc-purple-dark text-white rounded-md font-medium"
+              className="px-4 py-1.5 text-xs bg-igc-accent hover:bg-igc-accent-dark text-white rounded-md font-medium"
             >
               Accept & add to estimate
             </button>

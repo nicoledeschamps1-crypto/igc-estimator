@@ -1,3 +1,17 @@
+import {
+  Blinds,
+  Wallpaper,
+  Palette,
+  Sparkles,
+  FileText,
+  LayoutList,
+  BookOpen,
+  Map,
+  Receipt,
+  HelpCircle,
+  type LucideIcon,
+} from 'lucide-react'
+
 type Milestone = {
   id: string
   label: string
@@ -87,53 +101,53 @@ const MILESTONES: Milestone[] = [
 
 const HOW_IT_WORKS = [
   { step: '1', label: 'Pick a trade', detail: 'Window Film, Wallcovering, or Mural tab. Fill in the dimensions and options.' },
-  { step: '2', label: 'Add to estimate', detail: 'Click the purple button. Switch trades and add more line items as needed.' },
+  { step: '2', label: 'Add to estimate', detail: 'Click the blue button. Switch trades and add more line items as needed.' },
   { step: '3', label: 'Fill project info', detail: 'In the Estimate tab, add the client name, address, estimate number, and any notes.' },
   { step: '4', label: 'Save to pipeline', detail: 'Hit Save to pipeline. Estimates stick around forever in the Pipeline tab — reopen, duplicate, or change status any time.' },
   { step: '5', label: 'Download PDF', detail: 'Live preview on the right shows exactly what your client will see. Hit Download PDF when you\'re ready to send, then mark the estimate as Sent.' },
 ]
 
-type SectionRef = { emoji: string; title: string; purpose: string; keyInputs: string[] }
+type SectionRef = { Icon: LucideIcon; title: string; purpose: string; keyInputs: string[] }
 
 const SECTION_REFERENCE: SectionRef[] = [
   {
-    emoji: '🪟',
+    Icon: Blinds,
     title: 'Window Film',
     purpose: 'Calculates film cost per window group. Handles roll width warnings, waste, markup, tax, and complexity surcharges.',
     keyInputs: ['Quantity · width × height (inches)', 'Film type from catalog', 'Waste factor · labor rate · markup · tax', 'Complexity toggles (arched, above 10ft, exterior, hard water, old film removal)'],
   },
   {
-    emoji: '🖼️',
+    Icon: Wallpaper,
     title: 'Wallcovering',
     purpose: 'Calculates rolls + labor for vinyl wallcovering. Handles pattern waste, surface prep, and client-supplied material.',
     keyInputs: ['Room perimeter × height', 'Openings (doors + windows) to subtract', 'Single vs double roll + pattern waste %', 'Surface prep line items (skim coat, prime, removal)', 'Toggle: client buys material → quote labor only'],
   },
   {
-    emoji: '🎨',
+    Icon: Palette,
     title: 'Mural',
     purpose: 'Calculates hand-painted mural pricing across 4 complexity tiers, with access multipliers and flexible deposit schedule.',
     keyInputs: ['Wall width × height', 'Style tier (flat → signature)', 'Access: ground / ladder / lift', 'Design fee (optional)', 'Deposit: 50/50 residential or 33/33/33 commercial'],
   },
   {
-    emoji: '✨',
+    Icon: Sparkles,
     title: 'AI Draft',
     purpose: 'Paste the client\'s scope text and Claude drafts rough line items. Every suggestion is source-cited and confidence-flagged.',
     keyInputs: ['Paste scope (email, meeting notes, RFP text)', 'Optional: load the example scope to test', 'Each drafted item shows source quote + assumptions + confidence', '"Accept & add to estimate" feeds the workspace'],
   },
   {
-    emoji: '📄',
+    Icon: FileText,
     title: 'Estimate',
     purpose: 'The central proposal builder. Combines line items from every trade, lets you add client info, saves to pipeline, exports real PDF.',
     keyInputs: ['Workspace chip shows which saved estimate is open', 'Project info (client, address, estimate #, notes)', 'Line items list with totals', 'Live PDF preview on the right · Download PDF when ready'],
   },
   {
-    emoji: '📋',
+    Icon: LayoutList,
     title: 'Pipeline',
     purpose: 'Every saved estimate with its status. Forecast revenue, track win rate, duplicate past estimates as templates.',
     keyInputs: ['Dashboard: Forecast · Accepted · Win rate · Total count', 'Status chips (Draft → Sent → Accepted / Declined)', 'Filter by status · click any row to reopen', 'Duplicate as starting template for similar jobs'],
   },
   {
-    emoji: '💲',
+    Icon: BookOpen,
     title: 'Catalog',
     purpose: 'Your default rate card. Every calculator pulls its product list from here — edit once, update everywhere.',
     keyInputs: ['Window Film: name, roll width, cost/sf', 'Wallcovering: roll type, usable sf/roll, cost/roll, pattern waste %', 'Mural: name, description, material + labor $/sf', 'Reset per-category or reset all to defaults'],
@@ -144,9 +158,11 @@ export default function GuidePanel() {
   return (
     <div className="max-w-4xl space-y-8">
       {/* Hero */}
-      <section className="bg-gradient-to-br from-igc-purple to-igc-purple-dark text-white rounded-lg p-8">
+      <section className="bg-gradient-to-br from-igc-accent to-igc-accent-dark text-white rounded-lg p-8">
         <div className="flex items-start gap-4">
-          <div className="text-4xl">🗺️</div>
+          <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-white/15 flex items-center justify-center">
+            <Map size={26} strokeWidth={1.75} />
+          </div>
           <div>
             <h1 className="text-2xl font-bold mb-2">IGC Estimator — Guide</h1>
             <p className="text-sm text-white/90 leading-relaxed">
@@ -163,7 +179,7 @@ export default function GuidePanel() {
         <ol className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {HOW_IT_WORKS.map((step) => (
             <li key={step.step} className="flex items-start gap-3">
-              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-igc-purple-light border border-igc-purple/40 text-igc-purple font-semibold text-sm flex items-center justify-center">
+              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-igc-accent-light border border-igc-accent/40 text-igc-accent font-semibold text-sm flex items-center justify-center">
                 {step.step}
               </div>
               <div>
@@ -180,9 +196,11 @@ export default function GuidePanel() {
         <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted mb-4">What each section does</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {SECTION_REFERENCE.map((s) => (
-            <div key={s.title} className="border border-igc-line rounded-md p-4 hover:border-igc-purple transition-colors">
+            <div key={s.title} className="border border-igc-line rounded-md p-4 hover:border-igc-accent transition-colors">
               <div className="flex items-start gap-3 mb-2">
-                <div className="text-2xl flex-shrink-0">{s.emoji}</div>
+                <div className="flex-shrink-0 w-10 h-10 rounded-md bg-igc-accent-light text-igc-accent flex items-center justify-center">
+                  <s.Icon size={20} strokeWidth={1.75} />
+                </div>
                 <div className="flex-1 min-w-0">
                   <div className="font-semibold text-sm text-igc-ink">{s.title}</div>
                   <div className="text-xs text-igc-muted leading-relaxed mt-0.5">{s.purpose}</div>
@@ -191,7 +209,7 @@ export default function GuidePanel() {
               <ul className="mt-2 space-y-1 pl-1">
                 {s.keyInputs.map((input, i) => (
                   <li key={i} className="text-xs text-igc-ink flex items-start gap-2">
-                    <span className="text-igc-purple flex-shrink-0">·</span>
+                    <span className="text-igc-accent flex-shrink-0">·</span>
                     <span>{input}</span>
                   </li>
                 ))}
@@ -210,7 +228,7 @@ export default function GuidePanel() {
               <span className="w-2 h-2 rounded-full bg-emerald-500"></span>Shipped
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-igc-purple animate-pulse"></span>In progress
+              <span className="w-2 h-2 rounded-full bg-igc-accent animate-pulse"></span>In progress
             </span>
             <span className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-igc-line border border-igc-muted/30"></span>Planned
@@ -228,7 +246,7 @@ export default function GuidePanel() {
                     m.status === 'done'
                       ? 'bg-emerald-500 text-white'
                       : m.status === 'current'
-                        ? 'bg-igc-purple text-white animate-pulse'
+                        ? 'bg-igc-accent text-white animate-pulse'
                         : 'bg-igc-surface border-2 border-igc-line text-igc-muted'
                   }`}
                   title={m.status}
@@ -244,7 +262,7 @@ export default function GuidePanel() {
                       </span>
                     )}
                     {m.status === 'current' && (
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-igc-purple text-white uppercase tracking-wider font-medium">
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-igc-accent text-white uppercase tracking-wider font-medium">
                         In progress
                       </span>
                     )}
@@ -268,19 +286,19 @@ export default function GuidePanel() {
       </section>
 
       {/* Needed from dad */}
-      <section className="bg-amber-50 border border-amber-200 rounded-lg p-6">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-amber-900 mb-3">Needed from dad</h2>
-        <ul className="space-y-2 text-sm text-amber-900">
+      <section className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 rounded-lg p-6">
+        <h2 className="text-sm font-semibold uppercase tracking-wider text-amber-900 dark:text-amber-200 mb-3">Needed from dad</h2>
+        <ul className="space-y-2 text-sm text-amber-900 dark:text-amber-200">
           <li className="flex items-start gap-2">
-            <span>📄</span>
+            <FileText size={16} className="mt-0.5 flex-shrink-0" strokeWidth={1.75} />
             <span>2–3 recent sample quotes (PDF or Word) — so the tool matches his format</span>
           </li>
           <li className="flex items-start gap-2">
-            <span>💲</span>
+            <Receipt size={16} className="mt-0.5 flex-shrink-0" strokeWidth={1.75} />
             <span>Actual rate card — materials + labor by trade, so the catalog defaults are his real numbers</span>
           </li>
           <li className="flex items-start gap-2">
-            <span>❓</span>
+            <HelpCircle size={16} className="mt-0.5 flex-shrink-0" strokeWidth={1.75} />
             <span>Residential vs commercial mix, standard markup %, deposit preferences</span>
           </li>
         </ul>

@@ -129,7 +129,7 @@ export default function WallcoveringCalculator() {
         <section className="bg-igc-surface border border-igc-line rounded-lg p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted">Rooms / walls</h2>
-            <button onClick={addRoom} className="text-sm text-igc-purple hover:text-igc-purple-dark font-medium">
+            <button onClick={addRoom} className="text-sm text-igc-accent hover:text-igc-accent-dark font-medium">
               + Add room
             </button>
           </div>
@@ -150,14 +150,14 @@ export default function WallcoveringCalculator() {
                   placeholder="e.g. Lobby"
                   value={r.label}
                   onChange={(e) => updateRoom(r.id, { label: e.target.value })}
-                  className="px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                  className="px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-accent"
                 />
                 <input
                   type="number"
                   min={0}
                   value={r.perimeterFt}
                   onChange={(e) => updateRoom(r.id, { perimeterFt: +e.target.value || 0 })}
-                  className="px-2 py-2 border border-igc-line rounded-md text-sm text-right focus:outline-none focus:border-igc-purple"
+                  className="px-2 py-2 border border-igc-line rounded-md text-sm text-right focus:outline-none focus:border-igc-accent"
                 />
                 <input
                   type="number"
@@ -165,14 +165,14 @@ export default function WallcoveringCalculator() {
                   step={0.5}
                   value={r.heightFt}
                   onChange={(e) => updateRoom(r.id, { heightFt: +e.target.value || 0 })}
-                  className="px-2 py-2 border border-igc-line rounded-md text-sm text-right focus:outline-none focus:border-igc-purple"
+                  className="px-2 py-2 border border-igc-line rounded-md text-sm text-right focus:outline-none focus:border-igc-accent"
                 />
                 <input
                   type="number"
                   min={0}
                   value={r.openingsSqFt}
                   onChange={(e) => updateRoom(r.id, { openingsSqFt: +e.target.value || 0 })}
-                  className="px-2 py-2 border border-igc-line rounded-md text-sm text-right focus:outline-none focus:border-igc-purple"
+                  className="px-2 py-2 border border-igc-line rounded-md text-sm text-right focus:outline-none focus:border-igc-accent"
                 />
                 <button
                   onClick={() => removeRoom(r.id)}
@@ -199,7 +199,7 @@ export default function WallcoveringCalculator() {
               <select
                 value={materialId}
                 onChange={(e) => setMaterialId(e.target.value)}
-                className="w-full px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                className="w-full px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-accent"
               >
                 {wallcoverings.map((m) => (
                   <option key={m.id} value={m.id}>
@@ -214,7 +214,7 @@ export default function WallcoveringCalculator() {
                 type="checkbox"
                 checked={clientSuppliesMaterial}
                 onChange={(e) => setClientSuppliesMaterial(e.target.checked)}
-                className="accent-igc-purple"
+                className="accent-igc-accent"
               />
               <span>Client supplies material (labor + prep only)</span>
             </label>
@@ -229,7 +229,7 @@ export default function WallcoveringCalculator() {
                     max={20}
                     value={extraWastePct}
                     onChange={(e) => setExtraWastePct(+e.target.value)}
-                    className="flex-1 accent-igc-purple"
+                    className="flex-1 accent-igc-accent"
                   />
                   <span className="text-sm font-mono w-10 text-right">{extraWastePct}%</span>
                 </div>
@@ -244,7 +244,7 @@ export default function WallcoveringCalculator() {
                     step={0.25}
                     value={laborPerSqFt}
                     onChange={(e) => setLaborPerSqFt(+e.target.value || 0)}
-                    className="flex-1 px-2 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                    className="flex-1 px-2 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-accent"
                   />
                 </div>
               </div>
@@ -258,7 +258,7 @@ export default function WallcoveringCalculator() {
                     max={100}
                     value={markupPct}
                     onChange={(e) => setMarkupPct(+e.target.value)}
-                    className="flex-1 accent-igc-purple"
+                    className="flex-1 accent-igc-accent"
                   />
                   <span className="text-sm font-mono w-10 text-right">{markupPct}%</span>
                 </div>
@@ -272,7 +272,7 @@ export default function WallcoveringCalculator() {
                     step={0.125}
                     value={taxPct}
                     onChange={(e) => setTaxPct(+e.target.value || 0)}
-                    className="flex-1 px-2 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                    className="flex-1 px-2 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-accent"
                   />
                   <span className="text-igc-muted text-sm">%</span>
                 </div>
@@ -284,7 +284,7 @@ export default function WallcoveringCalculator() {
         <section className="bg-igc-surface border border-igc-line rounded-lg p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted">Surface prep</h2>
-            <button onClick={addPrep} className="text-sm text-igc-purple hover:text-igc-purple-dark font-medium">
+            <button onClick={addPrep} className="text-sm text-igc-accent hover:text-igc-accent-dark font-medium">
               + Add prep line
             </button>
           </div>
@@ -304,14 +304,14 @@ export default function WallcoveringCalculator() {
                   placeholder="e.g. Skim coat"
                   value={p.label}
                   onChange={(e) => updatePrep(p.id, { label: e.target.value })}
-                  className="px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                  className="px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-accent"
                 />
                 <input
                   type="number"
                   min={0}
                   value={p.sqFt}
                   onChange={(e) => updatePrep(p.id, { sqFt: +e.target.value || 0 })}
-                  className="px-2 py-2 border border-igc-line rounded-md text-sm text-right focus:outline-none focus:border-igc-purple"
+                  className="px-2 py-2 border border-igc-line rounded-md text-sm text-right focus:outline-none focus:border-igc-accent"
                 />
                 <div className="flex items-center gap-1">
                   <span className="text-igc-muted text-sm">$</span>
@@ -320,7 +320,7 @@ export default function WallcoveringCalculator() {
                     step={0.25}
                     value={p.ratePerSqFt}
                     onChange={(e) => updatePrep(p.id, { ratePerSqFt: +e.target.value || 0 })}
-                    className="flex-1 px-2 py-2 border border-igc-line rounded-md text-sm text-right focus:outline-none focus:border-igc-purple"
+                    className="flex-1 px-2 py-2 border border-igc-line rounded-md text-sm text-right focus:outline-none focus:border-igc-accent"
                   />
                 </div>
                 <button
@@ -374,7 +374,7 @@ export default function WallcoveringCalculator() {
               <SummaryRow label={`Tax (${taxPct}%)`} value={fmtCurrency(calc.tax)} muted />
             </div>
 
-            <div className="border-t-2 border-igc-purple mt-4 pt-4">
+            <div className="border-t-2 border-igc-accent mt-4 pt-4">
               <div className="flex items-baseline justify-between">
                 <span className="text-xs uppercase tracking-wider text-igc-muted">Total</span>
                 <span className="text-2xl font-semibold text-igc-ink">{fmtCurrency(calc.total)}</span>
@@ -403,7 +403,7 @@ export default function WallcoveringCalculator() {
                   ],
                 })
               }}
-              className="mt-4 w-full px-4 py-2.5 bg-igc-purple hover:bg-igc-purple-dark text-white rounded-md text-sm font-medium transition-colors"
+              className="mt-4 w-full px-4 py-2.5 bg-igc-accent hover:bg-igc-accent-dark text-white rounded-md text-sm font-medium transition-colors"
             >
               + Add to estimate
             </button>

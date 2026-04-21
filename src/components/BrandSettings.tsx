@@ -39,13 +39,13 @@ export default function BrandSettings() {
     <section className="bg-igc-surface border border-igc-line rounded-lg">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-igc-purple-light transition-colors rounded-lg"
+        className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-igc-accent-light transition-colors rounded-lg"
       >
         <div className="flex items-center gap-3 min-w-0">
           {brand.logoDataUrl ? (
             <img src={brand.logoDataUrl} alt="" className="w-8 h-8 object-contain rounded bg-igc-surface border border-igc-line" />
           ) : (
-            <div className="w-8 h-8 rounded bg-igc-purple flex items-center justify-center text-white text-[10px] font-semibold">
+            <div className="w-8 h-8 rounded bg-igc-accent flex items-center justify-center text-white text-[10px] font-semibold">
               LOGO
             </div>
           )}
@@ -66,7 +66,7 @@ export default function BrandSettings() {
             <label className="block text-xs font-medium text-igc-ink mb-2">Logo</label>
 
             <div className="flex items-start gap-4">
-              <div className="w-28 h-20 bg-igc-purple-light border border-igc-line rounded-md flex items-center justify-center overflow-hidden flex-shrink-0">
+              <div className="w-28 h-20 bg-igc-accent-light border border-igc-line rounded-md flex items-center justify-center overflow-hidden flex-shrink-0">
                 {brand.logoDataUrl ? (
                   <img src={brand.logoDataUrl} alt="Logo preview" className="max-w-full max-h-full object-contain" />
                 ) : (
@@ -78,14 +78,14 @@ export default function BrandSettings() {
                 <div className="flex flex-wrap gap-2">
                   <button
                     onClick={() => fileRef.current?.click()}
-                    className="px-3 py-1.5 bg-igc-purple hover:bg-igc-purple-dark text-white rounded-md text-xs font-medium"
+                    className="px-3 py-1.5 bg-igc-accent hover:bg-igc-accent-dark text-white rounded-md text-xs font-medium"
                   >
                     {brand.logoDataUrl ? 'Replace logo' : 'Upload logo'}
                   </button>
                   {brand.logoDataUrl && (
                     <button
                       onClick={onClearLogo}
-                      className="px-3 py-1.5 border border-igc-line text-igc-muted hover:text-igc-purple hover:border-igc-purple rounded-md text-xs"
+                      className="px-3 py-1.5 border border-igc-line text-igc-muted hover:text-igc-accent hover:border-igc-accent rounded-md text-xs"
                       title="Clear uploaded logo and restore default"
                     >
                       Use IGC default
@@ -113,7 +113,7 @@ export default function BrandSettings() {
                       step={4}
                       value={brand.logoWidthPt}
                       onChange={(e) => setBrand({ logoWidthPt: +e.target.value })}
-                      className="w-full accent-igc-purple"
+                      className="w-full accent-igc-accent"
                     />
                   </div>
                 )}
@@ -132,7 +132,7 @@ export default function BrandSettings() {
                 type="text"
                 value={brand.companyName}
                 onChange={(e) => setBrand({ companyName: e.target.value })}
-                className="w-full px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                className="w-full px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-accent"
               />
             </Field>
             <Field label="Website">
@@ -140,7 +140,7 @@ export default function BrandSettings() {
                 type="text"
                 value={brand.website}
                 onChange={(e) => setBrand({ website: e.target.value })}
-                className="w-full px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                className="w-full px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-accent"
               />
             </Field>
             <div className="md:col-span-2">
@@ -149,7 +149,7 @@ export default function BrandSettings() {
                   type="text"
                   value={brand.tagline}
                   onChange={(e) => setBrand({ tagline: e.target.value })}
-                  className="w-full px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                  className="w-full px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-accent"
                 />
               </Field>
             </div>

@@ -6,9 +6,13 @@ export default {
     extend: {
       colors: {
         igc: {
-          purple: '#8B45E8',
-          'purple-dark': '#6B2EC5',
-          'purple-light': 'rgb(var(--igc-purple-light) / <alpha-value>)',
+          // Primary accent — cobalt blue from igcstudio.com (papi's brand blue)
+          accent: '#0955A6',
+          'accent-dark': '#073F7D',
+          'accent-light': 'rgb(var(--igc-accent-light) / <alpha-value>)',
+          // Secondary accent — dusty rose from igcstudio.com (used sparingly for highlights)
+          rose: '#CC3366',
+          // Theme-aware tokens (CSS-variable-backed)
           ink: 'rgb(var(--igc-ink) / <alpha-value>)',
           muted: 'rgb(var(--igc-muted) / <alpha-value>)',
           line: 'rgb(var(--igc-line) / <alpha-value>)',
@@ -20,6 +24,7 @@ export default {
       },
       fontFamily: {
         sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Helvetica Neue', 'sans-serif'],
+        display: ['Lato', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
         mono: ['Menlo', 'Monaco', 'monospace'],
       },
     },

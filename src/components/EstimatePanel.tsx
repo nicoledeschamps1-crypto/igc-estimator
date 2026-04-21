@@ -10,9 +10,9 @@ const TRADE_LABELS: Record<TradeKind, string> = {
 }
 
 const TRADE_COLORS: Record<TradeKind, string> = {
-  film: 'bg-blue-100 text-blue-800',
-  wallcovering: 'bg-emerald-100 text-emerald-800',
-  mural: 'bg-rose-100 text-rose-800',
+  film: 'bg-blue-100 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300',
+  wallcovering: 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300',
+  mural: 'bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300',
 }
 
 function fmtCurrency(n: number) {
@@ -55,7 +55,7 @@ export default function EstimatePanel() {
               {current ? (
                 <>
                   Editing: {current.client.projectName || current.client.clientName || 'Untitled estimate'}
-                  <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded bg-igc-purple-light text-igc-purple uppercase tracking-wider font-semibold align-middle">
+                  <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded bg-igc-accent-light text-igc-accent uppercase tracking-wider font-semibold align-middle">
                     {current.status}
                   </span>
                 </>
@@ -80,7 +80,7 @@ export default function EstimatePanel() {
             <button
               onClick={onSave}
               disabled={quotes.length === 0}
-              className="px-4 py-2 text-sm font-medium rounded-md border border-igc-purple text-igc-purple hover:bg-igc-purple hover:text-white transition-colors disabled:border-igc-line disabled:text-igc-muted disabled:hover:bg-transparent disabled:hover:text-igc-muted disabled:cursor-not-allowed"
+              className="px-4 py-2 text-sm font-medium rounded-md border border-igc-accent text-igc-accent hover:bg-igc-accent hover:text-white transition-colors disabled:border-igc-line disabled:text-igc-muted disabled:hover:bg-transparent disabled:hover:text-igc-muted disabled:cursor-not-allowed"
             >
               {current ? 'Save changes' : 'Save to pipeline'}
             </button>
@@ -98,7 +98,7 @@ export default function EstimatePanel() {
                 placeholder="IGC-2026-001"
                 value={client.estimateNumber}
                 onChange={(e) => setClient({ estimateNumber: e.target.value })}
-                className="w-full px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                className="w-full px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-accent"
               />
             </Field>
             <Field label="Date">
@@ -106,7 +106,7 @@ export default function EstimatePanel() {
                 type="date"
                 value={client.dateIso}
                 onChange={(e) => setClient({ dateIso: e.target.value })}
-                className="w-full px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                className="w-full px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-accent"
               />
             </Field>
             <Field label="Project name">
@@ -115,7 +115,7 @@ export default function EstimatePanel() {
                 placeholder="Bayfront residence — feature wall"
                 value={client.projectName}
                 onChange={(e) => setClient({ projectName: e.target.value })}
-                className="w-full px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                className="w-full px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-accent"
               />
             </Field>
             <Field label="Client">
@@ -124,7 +124,7 @@ export default function EstimatePanel() {
                 placeholder="Jane Smith / ACME Hospitality"
                 value={client.clientName}
                 onChange={(e) => setClient({ clientName: e.target.value })}
-                className="w-full px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                className="w-full px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-accent"
               />
             </Field>
             <div className="md:col-span-2">
@@ -134,7 +134,7 @@ export default function EstimatePanel() {
                   placeholder="123 Palm Ave, Tampa FL 33602"
                   value={client.address}
                   onChange={(e) => setClient({ address: e.target.value })}
-                  className="w-full px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                  className="w-full px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-accent"
                 />
               </Field>
             </div>
@@ -145,7 +145,7 @@ export default function EstimatePanel() {
                   placeholder="Scope notes, assumptions, exclusions…"
                   value={client.notes}
                   onChange={(e) => setClient({ notes: e.target.value })}
-                  className="w-full px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-purple"
+                  className="w-full px-3 py-2 border border-igc-line rounded-md text-sm focus:outline-none focus:border-igc-accent"
                 />
               </Field>
             </div>
@@ -165,14 +165,14 @@ export default function EstimatePanel() {
               No quotes yet. Build a quote in <span className="font-medium text-igc-ink">Film</span>,{' '}
               <span className="font-medium text-igc-ink">Wallcovering</span>, or{' '}
               <span className="font-medium text-igc-ink">Mural</span>, then click{' '}
-              <span className="font-medium text-igc-purple">+ Add to estimate</span>.
+              <span className="font-medium text-igc-accent">+ Add to estimate</span>.
             </div>
           ) : (
             <ul className="space-y-2">
               {quotes.map((q, i) => (
                 <li
                   key={q.id}
-                  className="flex items-start justify-between gap-3 px-3 py-2.5 rounded-md border border-igc-line hover:border-igc-purple transition-colors"
+                  className="flex items-start justify-between gap-3 px-3 py-2.5 rounded-md border border-igc-line hover:border-igc-accent transition-colors"
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
@@ -200,7 +200,7 @@ export default function EstimatePanel() {
           )}
 
           {quotes.length > 0 && (
-            <div className="border-t-2 border-igc-purple mt-4 pt-3 flex items-baseline justify-between">
+            <div className="border-t-2 border-igc-accent mt-4 pt-3 flex items-baseline justify-between">
               <span className="text-xs uppercase tracking-wider text-igc-muted">Grand total</span>
               <span className="text-xl font-semibold text-igc-ink font-mono">{fmtCurrency(grandTotal)}</span>
             </div>
@@ -223,7 +223,7 @@ export default function EstimatePanel() {
           <button
             onClick={onSavePdf}
             disabled={quotes.length === 0}
-            className="px-5 py-2 bg-igc-purple hover:bg-igc-purple-dark text-white rounded-md text-sm font-medium transition-colors disabled:bg-igc-line disabled:text-igc-muted disabled:cursor-not-allowed"
+            className="px-5 py-2 bg-igc-accent hover:bg-igc-accent-dark text-white rounded-md text-sm font-medium transition-colors disabled:bg-igc-line disabled:text-igc-muted disabled:cursor-not-allowed"
           >
             Download PDF
           </button>
