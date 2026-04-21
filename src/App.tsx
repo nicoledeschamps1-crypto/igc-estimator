@@ -4,17 +4,19 @@ import WallcoveringCalculator from './components/WallcoveringCalculator'
 import MuralCalculator from './components/MuralCalculator'
 import EstimatePanel from './components/EstimatePanel'
 import PipelinePanel from './components/PipelinePanel'
+import AIDraftPanel from './components/AIDraftPanel'
 import CatalogEditor from './components/CatalogEditor'
 import GuidePanel from './components/GuidePanel'
 import { EstimateProvider, useEstimate } from './estimate/EstimateContext'
 import { CatalogProvider } from './catalog/CatalogContext'
 
-type Tab = 'film' | 'wallcovering' | 'mural' | 'estimate' | 'pipeline' | 'catalog' | 'guide'
+type Tab = 'film' | 'wallcovering' | 'mural' | 'ai' | 'estimate' | 'pipeline' | 'catalog' | 'guide'
 
-const TABS: Array<{ id: Tab; label: string; sublabel: string; group: 'trades' | 'pipeline' | 'settings' }> = [
+const TABS: Array<{ id: Tab; label: string; sublabel: string; group: 'trades' | 'ai' | 'pipeline' | 'settings' }> = [
   { id: 'film', label: 'Window Film', sublabel: 'Privacy · solar · security · decorative', group: 'trades' },
   { id: 'wallcovering', label: 'Wallcovering', sublabel: 'Commercial vinyl · patterned · custom', group: 'trades' },
   { id: 'mural', label: 'Mural', sublabel: 'Hand-painted · branded · signature', group: 'trades' },
+  { id: 'ai', label: 'AI Draft', sublabel: 'Paste a scope · Claude drafts line items', group: 'ai' },
   { id: 'estimate', label: 'Estimate', sublabel: 'Combined proposal · PDF export', group: 'trades' },
   { id: 'pipeline', label: 'Pipeline', sublabel: 'Saved estimates · revenue forecast', group: 'pipeline' },
   { id: 'catalog', label: 'Catalog', sublabel: 'Edit default rates + products', group: 'settings' },
@@ -48,7 +50,7 @@ function AppShell() {
               <div className="text-xs text-igc-muted">{active.sublabel}</div>
             </div>
           </div>
-          <div className="text-xs text-igc-muted">v0.5 · prototype</div>
+          <div className="text-xs text-igc-muted">v0.6 · prototype</div>
         </div>
 
         <nav className="max-w-7xl mx-auto px-6">
@@ -88,6 +90,9 @@ function AppShell() {
         </div>
         <div hidden={tab !== 'mural'}>
           <MuralCalculator />
+        </div>
+        <div hidden={tab !== 'ai'}>
+          <AIDraftPanel />
         </div>
         <div hidden={tab !== 'estimate'}>
           <EstimatePanel />

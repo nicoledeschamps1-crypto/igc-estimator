@@ -50,13 +50,15 @@ const MILESTONES: Milestone[] = [
   {
     id: 'M4',
     label: 'M4 · AI draft from scope text',
-    status: 'planned',
-    summary: 'Paste a scope, AI fills the estimate',
+    status: 'current',
+    summary: 'Paste a scope · Claude drafts line items · source-cited · Worker deploy pending',
     items: [
-      'Paste client scope text → Claude drafts line items automatically',
-      'Every AI suggestion cites its source (scope quote or assumption)',
-      '⚠ flags on anything AI wasn\'t confident about',
-      '"Accept & Edit" always the main button — AI is a starting point',
+      'AI Draft tab shipped — paste scope, Claude drafts line items automatically',
+      'Every AI suggestion cites its source quote from the scope',
+      '⚠ Low / · Medium / ✓ High confidence chips on every item',
+      '"Accept & add to estimate" button feeds the workspace',
+      'Cloudflare Worker (worker/) holds the API key server-side — deploy with `wrangler deploy`',
+      '⏳ Nicole to deploy Worker + paste URL into setup card before first use',
     ],
   },
   {

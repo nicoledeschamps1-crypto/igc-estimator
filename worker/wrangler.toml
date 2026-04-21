@@ -1,0 +1,9 @@
+name = "igc-estimator-worker"
+main = "src/index.ts"
+compatibility_date = "2026-04-01"
+
+# Secrets (set via: wrangler secret put ANTHROPIC_API_KEY)
+# Vars (public, non-secret):
+[vars]
+ALLOWED_ORIGINS = "https://nicoledeschamps1-crypto.github.io,http://localhost:5173,http://localhost:5174"
+MODEL = "claude-sonnet-4-6"
