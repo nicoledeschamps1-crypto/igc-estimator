@@ -320,7 +320,7 @@ function DraftCard({
             {conf.label}
           </span>
           {item.catalogChoice && (
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-igc-accent-light text-igc-accent font-medium">
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-igc-accent-light text-igc-accent dark:text-blue-300 font-medium">
               {item.catalogChoice}
             </span>
           )}

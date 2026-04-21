@@ -55,7 +55,7 @@ export default function EstimatePanel() {
               {current ? (
                 <>
                   Editing: {current.client.projectName || current.client.clientName || 'Untitled estimate'}
-                  <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded bg-igc-accent-light text-igc-accent uppercase tracking-wider font-semibold align-middle">
+                  <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded bg-igc-accent-light text-igc-accent dark:text-blue-300 uppercase tracking-wider font-semibold align-middle">
                     {current.status}
                   </span>
                 </>

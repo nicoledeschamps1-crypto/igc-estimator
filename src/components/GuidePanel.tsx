@@ -179,7 +179,7 @@ export default function GuidePanel() {
         <ol className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {HOW_IT_WORKS.map((step) => (
             <li key={step.step} className="flex items-start gap-3">
-              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-igc-accent-light border border-igc-accent/40 text-igc-accent font-semibold text-sm flex items-center justify-center">
+              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-igc-accent-light border border-igc-accent/40 text-igc-accent dark:text-blue-300 font-semibold text-sm flex items-center justify-center">
                 {step.step}
               </div>
               <div>
@@ -198,7 +198,7 @@ export default function GuidePanel() {
           {SECTION_REFERENCE.map((s) => (
             <div key={s.title} className="border border-igc-line rounded-md p-4 hover:border-igc-accent transition-colors">
               <div className="flex items-start gap-3 mb-2">
-                <div className="flex-shrink-0 w-10 h-10 rounded-md bg-igc-accent-light text-igc-accent flex items-center justify-center">
+                <div className="flex-shrink-0 w-10 h-10 rounded-md bg-igc-accent-light text-igc-accent dark:text-blue-300 flex items-center justify-center">
                   <s.Icon size={20} strokeWidth={1.75} />
                 </div>
                 <div className="flex-1 min-w-0">

@@ -192,7 +192,7 @@ function PipelineBadge() {
   const { savedEstimates } = useEstimate()
   if (savedEstimates.length === 0) return null
   return (
-    <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-igc-accent-light text-igc-accent text-[10px] font-semibold">
+    <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-igc-accent-light text-igc-accent dark:text-blue-300 text-[10px] font-semibold">
       {savedEstimates.length}
     </span>
   )

@@ -157,7 +157,7 @@ export default function OnboardingTour({ open, onClose, onNavigate }: Props) {
 
         <div className="p-6 sm:p-8">
           <div className="flex items-start gap-4 mb-4">
-            <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-igc-accent-light text-igc-accent flex items-center justify-center">
+            <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-igc-accent-light text-igc-accent dark:text-blue-300 flex items-center justify-center">
               <step.Icon size={26} strokeWidth={1.75} />
             </div>
             <div className="flex-1 min-w-0">
