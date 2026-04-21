@@ -148,14 +148,16 @@ export default function FilmCalculator() {
           </div>
 
           {windows.length === 0 ? (
-            <button
-              onClick={addWindow}
-              className="w-full border-2 border-dashed border-igc-line hover:border-igc-accent rounded-md py-8 text-sm text-igc-muted hover:text-igc-accent transition-colors flex flex-col items-center gap-2"
-            >
-              <Plus size={20} strokeWidth={1.75} />
-              <span>Add your first window group</span>
-              <span className="text-[11px] text-igc-muted/80">Quantity · width × height in inches</span>
-            </button>
+            <div className="flex flex-col items-center gap-2 py-6">
+              <button
+                onClick={addWindow}
+                className="px-5 py-2.5 bg-igc-accent hover:bg-igc-accent-dark text-white rounded-md text-sm font-medium inline-flex items-center gap-2"
+              >
+                <Plus size={16} strokeWidth={2} />
+                Add your first window group
+              </button>
+              <span className="text-[11px] text-igc-muted">Quantity · width × height in inches</span>
+            </div>
           ) : (
           <div className="space-y-3">
             <div className="grid grid-cols-[1fr_80px_90px_90px_40px] gap-2 text-xs font-medium text-igc-muted px-1">
