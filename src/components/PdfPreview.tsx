@@ -50,7 +50,7 @@ export default function PdfPreview() {
           <iframe
             src={`${blobUrl}#toolbar=0&navpanes=0&scrollbar=1&view=FitH`}
             title="Estimate PDF preview"
-            className="w-full h-full bg-white"
+            className="w-full h-full bg-igc-surface"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-sm text-igc-muted">

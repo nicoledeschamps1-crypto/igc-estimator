@@ -36,14 +36,14 @@ export default function BrandSettings() {
 
   const displayName = brand.companyName || '—'
   return (
-    <section className="bg-white border border-igc-line rounded-lg">
+    <section className="bg-igc-surface border border-igc-line rounded-lg">
       <button
         onClick={() => setOpen((v) => !v)}
         className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-igc-purple-light transition-colors rounded-lg"
       >
         <div className="flex items-center gap-3 min-w-0">
           {brand.logoDataUrl ? (
-            <img src={brand.logoDataUrl} alt="" className="w-8 h-8 object-contain rounded bg-white border border-igc-line" />
+            <img src={brand.logoDataUrl} alt="" className="w-8 h-8 object-contain rounded bg-igc-surface border border-igc-line" />
           ) : (
             <div className="w-8 h-8 rounded bg-igc-purple flex items-center justify-center text-white text-[10px] font-semibold">
               LOGO

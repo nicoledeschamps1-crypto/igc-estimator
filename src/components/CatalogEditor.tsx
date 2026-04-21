@@ -37,7 +37,7 @@ export default function CatalogEditor() {
       </section>
 
       {/* FILMS */}
-      <section className="bg-white border border-igc-line rounded-lg overflow-hidden">
+      <section className="bg-igc-surface border border-igc-line rounded-lg overflow-hidden">
         <div className="flex items-center justify-between px-6 py-4 border-b border-igc-line">
           <div>
             <h3 className="text-sm font-semibold text-igc-ink">Window Film</h3>
@@ -104,7 +104,7 @@ export default function CatalogEditor() {
       </section>
 
       {/* WALLCOVERINGS */}
-      <section className="bg-white border border-igc-line rounded-lg overflow-hidden">
+      <section className="bg-igc-surface border border-igc-line rounded-lg overflow-hidden">
         <div className="flex items-center justify-between px-6 py-4 border-b border-igc-line">
           <div>
             <h3 className="text-sm font-semibold text-igc-ink">Wallcovering</h3>
@@ -190,7 +190,7 @@ export default function CatalogEditor() {
       </section>
 
       {/* MURAL STYLES */}
-      <section className="bg-white border border-igc-line rounded-lg overflow-hidden">
+      <section className="bg-igc-surface border border-igc-line rounded-lg overflow-hidden">
         <div className="flex items-center justify-between px-6 py-4 border-b border-igc-line">
           <div>
             <h3 className="text-sm font-semibold text-igc-ink">Mural styles</h3>

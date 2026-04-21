@@ -48,7 +48,7 @@ export default function EstimatePanel() {
     <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-6">
       {/* LEFT — editable controls */}
       <div className="space-y-6 min-w-0">
-        <section className="bg-white border border-igc-line rounded-lg p-4 flex items-center justify-between gap-3 flex-wrap">
+        <section className="bg-igc-surface border border-igc-line rounded-lg p-4 flex items-center justify-between gap-3 flex-wrap">
           <div className="min-w-0">
             <div className="text-[11px] uppercase tracking-wider text-igc-muted font-semibold">Workspace</div>
             <div className="text-sm font-medium text-igc-ink truncate">
@@ -89,7 +89,7 @@ export default function EstimatePanel() {
 
         <BrandSettings />
 
-        <section className="bg-white border border-igc-line rounded-lg p-6">
+        <section className="bg-igc-surface border border-igc-line rounded-lg p-6">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted mb-4">Project info</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Field label="Estimate #">
@@ -152,7 +152,7 @@ export default function EstimatePanel() {
           </div>
         </section>
 
-        <section className="bg-white border border-igc-line rounded-lg p-6">
+        <section className="bg-igc-surface border border-igc-line rounded-lg p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted">Line items</h2>
             <div className="text-xs text-igc-muted">

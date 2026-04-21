@@ -124,7 +124,7 @@ export default function FilmCalculator() {
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8">
       {/* LEFT — inputs */}
       <div className="space-y-6">
-        <section className="bg-white border border-igc-line rounded-lg p-6">
+        <section className="bg-igc-surface border border-igc-line rounded-lg p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted">Windows</h2>
             <button
@@ -186,7 +186,7 @@ export default function FilmCalculator() {
           </div>
         </section>
 
-        <section className="bg-white border border-igc-line rounded-lg p-6">
+        <section className="bg-igc-surface border border-igc-line rounded-lg p-6">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted mb-4">Film & rates</h2>
 
           <div className="space-y-4">
@@ -267,7 +267,7 @@ export default function FilmCalculator() {
           </div>
         </section>
 
-        <section className="bg-white border border-igc-line rounded-lg p-6">
+        <section className="bg-igc-surface border border-igc-line rounded-lg p-6">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted mb-4">Complexity</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             {(Object.keys(COMPLEXITY_MULTIPLIERS) as Array<keyof ComplexityFlags>).map((key) => (
@@ -276,7 +276,7 @@ export default function FilmCalculator() {
                 className={`flex items-center gap-2 px-3 py-2 rounded-md border cursor-pointer text-sm ${
                   flags[key]
                     ? 'bg-igc-purple-light border-igc-purple text-igc-ink'
-                    : 'bg-white border-igc-line text-igc-ink hover:border-igc-purple'
+                    : 'bg-igc-surface border-igc-line text-igc-ink hover:border-igc-purple'
                 }`}
               >
                 <input
@@ -295,7 +295,7 @@ export default function FilmCalculator() {
       {/* RIGHT — summary */}
       <aside className="space-y-4">
         <div className="sticky top-6 space-y-4">
-          <section className="bg-white border border-igc-line rounded-lg p-6">
+          <section className="bg-igc-surface border border-igc-line rounded-lg p-6">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted mb-4">Quote summary</h2>
 
             <div className="space-y-2 text-sm">

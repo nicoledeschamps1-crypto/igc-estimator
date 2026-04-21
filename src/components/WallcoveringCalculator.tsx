@@ -126,7 +126,7 @@ export default function WallcoveringCalculator() {
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8">
       {/* LEFT — inputs */}
       <div className="space-y-6">
-        <section className="bg-white border border-igc-line rounded-lg p-6">
+        <section className="bg-igc-surface border border-igc-line rounded-lg p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted">Rooms / walls</h2>
             <button onClick={addRoom} className="text-sm text-igc-purple hover:text-igc-purple-dark font-medium">
@@ -190,7 +190,7 @@ export default function WallcoveringCalculator() {
           </p>
         </section>
 
-        <section className="bg-white border border-igc-line rounded-lg p-6">
+        <section className="bg-igc-surface border border-igc-line rounded-lg p-6">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted mb-4">Material & rates</h2>
 
           <div className="space-y-4">
@@ -281,7 +281,7 @@ export default function WallcoveringCalculator() {
           </div>
         </section>
 
-        <section className="bg-white border border-igc-line rounded-lg p-6">
+        <section className="bg-igc-surface border border-igc-line rounded-lg p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted">Surface prep</h2>
             <button onClick={addPrep} className="text-sm text-igc-purple hover:text-igc-purple-dark font-medium">
@@ -343,7 +343,7 @@ export default function WallcoveringCalculator() {
       {/* RIGHT — summary */}
       <aside className="space-y-4">
         <div className="sticky top-6 space-y-4">
-          <section className="bg-white border border-igc-line rounded-lg p-6">
+          <section className="bg-igc-surface border border-igc-line rounded-lg p-6">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted mb-4">Quote summary</h2>
 
             <div className="space-y-2 text-sm">

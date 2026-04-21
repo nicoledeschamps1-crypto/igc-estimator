@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import FilmCalculator from './components/FilmCalculator'
 import WallcoveringCalculator from './components/WallcoveringCalculator'
 import MuralCalculator from './components/MuralCalculator'
@@ -7,8 +7,10 @@ import PipelinePanel from './components/PipelinePanel'
 import AIDraftPanel from './components/AIDraftPanel'
 import CatalogEditor from './components/CatalogEditor'
 import GuidePanel from './components/GuidePanel'
+import OnboardingTour, { hasBeenOnboarded } from './components/OnboardingTour'
 import { EstimateProvider, useEstimate } from './estimate/EstimateContext'
 import { CatalogProvider } from './catalog/CatalogContext'
+import { ThemeProvider, useTheme } from './theme/ThemeContext'
 
 type Tab = 'film' | 'wallcovering' | 'mural' | 'ai' | 'estimate' | 'pipeline' | 'catalog' | 'guide'
 
@@ -25,22 +27,32 @@ const TABS: Array<{ id: Tab; label: string; sublabel: string; group: 'trades' | 
 
 export default function App() {
   return (
-    <CatalogProvider>
-      <EstimateProvider>
-        <AppShell />
-      </EstimateProvider>
-    </CatalogProvider>
+    <ThemeProvider>
+      <CatalogProvider>
+        <EstimateProvider>
+          <AppShell />
+        </EstimateProvider>
+      </CatalogProvider>
+    </ThemeProvider>
   )
 }
 
 function AppShell() {
   const [tab, setTab] = useState<Tab>('film')
   const active = TABS.find((t) => t.id === tab)!
+  const [tourOpen, setTourOpen] = useState(false)
+
+  useEffect(() => {
+    if (!hasBeenOnboarded()) {
+      const t = setTimeout(() => setTourOpen(true), 400)
+      return () => clearTimeout(t)
+    }
+  }, [])
 
   return (
     <div className="min-h-screen">
-      <header className="border-b border-igc-line bg-white">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <header className="border-b border-igc-line bg-igc-surface">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-md bg-igc-purple flex items-center justify-center text-white font-bold text-sm">
               IGC
@@ -50,17 +62,27 @@ function AppShell() {
               <div className="text-xs text-igc-muted">{active.sublabel}</div>
             </div>
           </div>
-          <div className="text-xs text-igc-muted">v0.6 · prototype</div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setTourOpen(true)}
+              className="px-3 py-1.5 text-xs border border-igc-line rounded-md text-igc-muted hover:text-igc-ink hover:border-igc-purple"
+              title="Replay the onboarding tour"
+            >
+              Tour
+            </button>
+            <ThemeToggle />
+            <div className="text-xs text-igc-muted">v0.7 · prototype</div>
+          </div>
         </div>
 
         <nav className="max-w-7xl mx-auto px-6">
-          <div className="flex items-end gap-1 -mb-px">
+          <div className="flex items-end gap-1 -mb-px overflow-x-auto">
             {TABS.map((t, i) => {
               const isActive = t.id === tab
               const prev = TABS[i - 1]
               const needsDivider = prev && prev.group !== t.group
               return (
-                <div key={t.id} className="flex items-end">
+                <div key={t.id} className="flex items-end flex-shrink-0">
                   {needsDivider && <span className="mx-2 mb-3 w-px h-4 bg-igc-line" aria-hidden />}
                   <button
                     onClick={() => setTab(t.id)}
@@ -114,7 +136,27 @@ function AppShell() {
           dad reviews.
         </p>
       </footer>
+
+      <OnboardingTour
+        open={tourOpen}
+        onClose={() => setTourOpen(false)}
+        onNavigate={(tabId) => setTab(tabId as Tab)}
+      />
     </div>
+  )
+}
+
+function ThemeToggle() {
+  const { theme, toggle } = useTheme()
+  return (
+    <button
+      onClick={toggle}
+      className="px-3 py-1.5 text-xs border border-igc-line rounded-md text-igc-muted hover:text-igc-ink hover:border-igc-purple flex items-center gap-1.5"
+      title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+    >
+      <span>{theme === 'dark' ? '☀︎' : '☾'}</span>
+      <span className="hidden sm:inline">{theme === 'dark' ? 'Light' : 'Dark'}</span>
+    </button>
   )
 }
 
@@ -132,7 +174,7 @@ function PipelineBadge() {
   const { savedEstimates } = useEstimate()
   if (savedEstimates.length === 0) return null
   return (
-    <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-slate-200 text-slate-700 text-[10px] font-semibold">
+    <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-igc-purple-light text-igc-purple text-[10px] font-semibold">
       {savedEstimates.length}
     </span>
   )

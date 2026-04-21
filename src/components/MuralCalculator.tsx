@@ -104,7 +104,7 @@ export default function MuralCalculator() {
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8">
       {/* LEFT — inputs */}
       <div className="space-y-6">
-        <section className="bg-white border border-igc-line rounded-lg p-6">
+        <section className="bg-igc-surface border border-igc-line rounded-lg p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted">Walls</h2>
             <button onClick={addWall} className="text-sm text-igc-purple hover:text-igc-purple-dark font-medium">
@@ -157,7 +157,7 @@ export default function MuralCalculator() {
           </div>
         </section>
 
-        <section className="bg-white border border-igc-line rounded-lg p-6">
+        <section className="bg-igc-surface border border-igc-line rounded-lg p-6">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted mb-4">Style & complexity</h2>
 
           <div className="space-y-2">
@@ -167,7 +167,7 @@ export default function MuralCalculator() {
                 className={`flex items-start gap-3 px-4 py-3 rounded-md border cursor-pointer text-sm ${
                   s.id === styleId
                     ? 'bg-igc-purple-light border-igc-purple'
-                    : 'bg-white border-igc-line hover:border-igc-purple'
+                    : 'bg-igc-surface border-igc-line hover:border-igc-purple'
                 }`}
               >
                 <input
@@ -191,7 +191,7 @@ export default function MuralCalculator() {
           </div>
         </section>
 
-        <section className="bg-white border border-igc-line rounded-lg p-6">
+        <section className="bg-igc-surface border border-igc-line rounded-lg p-6">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted mb-4">Access / height</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
             {(Object.keys(ACCESS_MULTIPLIERS) as AccessKey[]).map((k) => (
@@ -200,7 +200,7 @@ export default function MuralCalculator() {
                 className={`flex items-center gap-2 px-3 py-2 rounded-md border cursor-pointer text-sm ${
                   access === k
                     ? 'bg-igc-purple-light border-igc-purple text-igc-ink'
-                    : 'bg-white border-igc-line text-igc-ink hover:border-igc-purple'
+                    : 'bg-igc-surface border-igc-line text-igc-ink hover:border-igc-purple'
                 }`}
               >
                 <input
@@ -216,7 +216,7 @@ export default function MuralCalculator() {
           </div>
         </section>
 
-        <section className="bg-white border border-igc-line rounded-lg p-6">
+        <section className="bg-igc-surface border border-igc-line rounded-lg p-6">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted mb-4">Fees & finance</h2>
 
           <div className="grid grid-cols-2 gap-4">
@@ -244,7 +244,7 @@ export default function MuralCalculator() {
                     className={`flex-1 flex items-center justify-center gap-1 px-3 py-2 rounded-md border cursor-pointer text-sm capitalize ${
                       projectType === t
                         ? 'bg-igc-purple-light border-igc-purple'
-                        : 'bg-white border-igc-line hover:border-igc-purple'
+                        : 'bg-igc-surface border-igc-line hover:border-igc-purple'
                     }`}
                   >
                     <input
@@ -295,7 +295,7 @@ export default function MuralCalculator() {
       {/* RIGHT — summary */}
       <aside className="space-y-4">
         <div className="sticky top-6 space-y-4">
-          <section className="bg-white border border-igc-line rounded-lg p-6">
+          <section className="bg-igc-surface border border-igc-line rounded-lg p-6">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted mb-4">Quote summary</h2>
 
             <div className="space-y-2 text-sm">
@@ -346,7 +346,7 @@ export default function MuralCalculator() {
             </button>
           </section>
 
-          <section className="bg-white border border-igc-line rounded-lg p-6">
+          <section className="bg-igc-surface border border-igc-line rounded-lg p-6">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted mb-4">Payment schedule</h2>
             <div className="space-y-2 text-sm">
               <SummaryRow

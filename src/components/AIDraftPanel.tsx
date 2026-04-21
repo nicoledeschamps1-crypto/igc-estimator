@@ -169,7 +169,7 @@ export default function AIDraftPanel() {
       {!activeUrl && <SetupCard override={override} setOverride={setOverride} envUrl={envUrl} />}
 
       {/* Scope input */}
-      <section className="bg-white border border-igc-line rounded-lg p-6 space-y-4">
+      <section className="bg-igc-surface border border-igc-line rounded-lg p-6 space-y-4">
         <div>
           <div className="flex items-baseline justify-between mb-2">
             <label className="text-sm font-semibold text-igc-ink">Client scope text</label>
@@ -228,7 +228,7 @@ export default function AIDraftPanel() {
           </div>
 
           {visibleItems.length === 0 && items.length === 0 && (
-            <div className="bg-white border border-igc-line rounded-lg p-10 text-center text-sm text-igc-muted">
+            <div className="bg-igc-surface border border-igc-line rounded-lg p-10 text-center text-sm text-igc-muted">
               Claude didn't find any line items in that scope. Try adding more detail.
             </div>
           )}
@@ -244,7 +244,7 @@ export default function AIDraftPanel() {
           ))}
 
           {visibleItems.length === 0 && items.length > 0 && (
-            <div className="bg-white border border-igc-line rounded-lg p-10 text-center text-sm text-igc-muted">
+            <div className="bg-igc-surface border border-igc-line rounded-lg p-10 text-center text-sm text-igc-muted">
               All items processed. Head to the <strong className="text-igc-ink">Estimate</strong> tab to review and send.
             </div>
           )}
@@ -268,7 +268,7 @@ function DraftCard({
   const conf = CONFIDENCE_META[item.confidence]
   return (
     <div
-      className={`bg-white border rounded-lg p-5 transition-colors ${
+      className={`bg-igc-surface border rounded-lg p-5 transition-colors ${
         accepted ? 'border-emerald-300 bg-emerald-50/40' : 'border-igc-line hover:border-igc-purple/40'
       }`}
     >
@@ -362,7 +362,7 @@ function SetupCard({
           placeholder="https://igc-estimator-worker.you.workers.dev"
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
-          className="flex-1 px-3 py-2 border border-amber-300 bg-white rounded-md text-sm focus:outline-none focus:border-amber-500"
+          className="flex-1 px-3 py-2 border border-amber-300 bg-igc-surface rounded-md text-sm focus:outline-none focus:border-amber-500"
         />
         <button
           onClick={() => setOverride(draft.trim())}

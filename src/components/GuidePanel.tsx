@@ -93,6 +93,53 @@ const HOW_IT_WORKS = [
   { step: '5', label: 'Download PDF', detail: 'Live preview on the right shows exactly what your client will see. Hit Download PDF when you\'re ready to send, then mark the estimate as Sent.' },
 ]
 
+type SectionRef = { emoji: string; title: string; purpose: string; keyInputs: string[] }
+
+const SECTION_REFERENCE: SectionRef[] = [
+  {
+    emoji: '🪟',
+    title: 'Window Film',
+    purpose: 'Calculates film cost per window group. Handles roll width warnings, waste, markup, tax, and complexity surcharges.',
+    keyInputs: ['Quantity · width × height (inches)', 'Film type from catalog', 'Waste factor · labor rate · markup · tax', 'Complexity toggles (arched, above 10ft, exterior, hard water, old film removal)'],
+  },
+  {
+    emoji: '🖼️',
+    title: 'Wallcovering',
+    purpose: 'Calculates rolls + labor for vinyl wallcovering. Handles pattern waste, surface prep, and client-supplied material.',
+    keyInputs: ['Room perimeter × height', 'Openings (doors + windows) to subtract', 'Single vs double roll + pattern waste %', 'Surface prep line items (skim coat, prime, removal)', 'Toggle: client buys material → quote labor only'],
+  },
+  {
+    emoji: '🎨',
+    title: 'Mural',
+    purpose: 'Calculates hand-painted mural pricing across 4 complexity tiers, with access multipliers and flexible deposit schedule.',
+    keyInputs: ['Wall width × height', 'Style tier (flat → signature)', 'Access: ground / ladder / lift', 'Design fee (optional)', 'Deposit: 50/50 residential or 33/33/33 commercial'],
+  },
+  {
+    emoji: '✨',
+    title: 'AI Draft',
+    purpose: 'Paste the client\'s scope text and Claude drafts rough line items. Every suggestion is source-cited and confidence-flagged.',
+    keyInputs: ['Paste scope (email, meeting notes, RFP text)', 'Optional: load the example scope to test', 'Each drafted item shows source quote + assumptions + confidence', '"Accept & add to estimate" feeds the workspace'],
+  },
+  {
+    emoji: '📄',
+    title: 'Estimate',
+    purpose: 'The central proposal builder. Combines line items from every trade, lets you add client info, saves to pipeline, exports real PDF.',
+    keyInputs: ['Workspace chip shows which saved estimate is open', 'Project info (client, address, estimate #, notes)', 'Line items list with totals', 'Live PDF preview on the right · Download PDF when ready'],
+  },
+  {
+    emoji: '📋',
+    title: 'Pipeline',
+    purpose: 'Every saved estimate with its status. Forecast revenue, track win rate, duplicate past estimates as templates.',
+    keyInputs: ['Dashboard: Forecast · Accepted · Win rate · Total count', 'Status chips (Draft → Sent → Accepted / Declined)', 'Filter by status · click any row to reopen', 'Duplicate as starting template for similar jobs'],
+  },
+  {
+    emoji: '💲',
+    title: 'Catalog',
+    purpose: 'Your default rate card. Every calculator pulls its product list from here — edit once, update everywhere.',
+    keyInputs: ['Window Film: name, roll width, cost/sf', 'Wallcovering: roll type, usable sf/roll, cost/roll, pattern waste %', 'Mural: name, description, material + labor $/sf', 'Reset per-category or reset all to defaults'],
+  },
+]
+
 export default function GuidePanel() {
   return (
     <div className="max-w-4xl space-y-8">
@@ -111,7 +158,7 @@ export default function GuidePanel() {
       </section>
 
       {/* How it works */}
-      <section className="bg-white border border-igc-line rounded-lg p-6">
+      <section className="bg-igc-surface border border-igc-line rounded-lg p-6">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted mb-4">How it works</h2>
         <ol className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {HOW_IT_WORKS.map((step) => (
@@ -128,8 +175,34 @@ export default function GuidePanel() {
         </ol>
       </section>
 
+      {/* Section reference — what each tab does */}
+      <section className="bg-igc-surface border border-igc-line rounded-lg p-6">
+        <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted mb-4">What each section does</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {SECTION_REFERENCE.map((s) => (
+            <div key={s.title} className="border border-igc-line rounded-md p-4 hover:border-igc-purple transition-colors">
+              <div className="flex items-start gap-3 mb-2">
+                <div className="text-2xl flex-shrink-0">{s.emoji}</div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-semibold text-sm text-igc-ink">{s.title}</div>
+                  <div className="text-xs text-igc-muted leading-relaxed mt-0.5">{s.purpose}</div>
+                </div>
+              </div>
+              <ul className="mt-2 space-y-1 pl-1">
+                {s.keyInputs.map((input, i) => (
+                  <li key={i} className="text-xs text-igc-ink flex items-start gap-2">
+                    <span className="text-igc-purple flex-shrink-0">·</span>
+                    <span>{input}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Roadmap */}
-      <section className="bg-white border border-igc-line rounded-lg p-6">
+      <section className="bg-igc-surface border border-igc-line rounded-lg p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted">Roadmap</h2>
           <div className="flex items-center gap-3 text-[10px] text-igc-muted uppercase tracking-wider">
@@ -156,7 +229,7 @@ export default function GuidePanel() {
                       ? 'bg-emerald-500 text-white'
                       : m.status === 'current'
                         ? 'bg-igc-purple text-white animate-pulse'
-                        : 'bg-white border-2 border-igc-line text-igc-muted'
+                        : 'bg-igc-surface border-2 border-igc-line text-igc-muted'
                   }`}
                   title={m.status}
                 >

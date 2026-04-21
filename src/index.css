@@ -2,10 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --igc-ink: 26 26 26;
+  --igc-muted: 107 107 107;
+  --igc-line: 230 224 240;
+  --igc-bg: 250 250 250;
+  --igc-surface: 255 255 255;
+  --igc-surface-2: 249 247 253;
+  --igc-purple-light: 244 240 250;
+}
+
+.dark {
+  --igc-ink: 241 240 245;
+  --igc-muted: 156 156 168;
+  --igc-line: 60 55 78;
+  --igc-bg: 20 18 28;
+  --igc-surface: 28 25 38;
+  --igc-surface-2: 36 32 48;
+  --igc-purple-light: 50 35 85;
+}
+
 body {
-  background: #FAFAFA;
-  color: #1A1A1A;
+  background: rgb(var(--igc-bg));
+  color: rgb(var(--igc-ink));
   -webkit-font-smoothing: antialiased;
+}
+
+/* Inputs default to surface in both themes */
+input, textarea, select {
+  background: rgb(var(--igc-surface));
+  color: rgb(var(--igc-ink));
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: rgb(var(--igc-muted) / 0.7);
 }
 
 @media print {
@@ -22,18 +53,14 @@ body {
     padding: 0 !important;
   }
 
-  /* Hide tabs that aren't the estimate when printing.
-     When print is triggered, the estimate tab should be active. */
   [hidden] {
     display: none !important;
   }
 
-  /* Remove card chrome on print */
   .estimate-print-root section {
     box-shadow: none !important;
   }
 
-  /* Let each quote card break nicely */
   .estimate-print-root .border {
     break-inside: avoid;
     page-break-inside: avoid;

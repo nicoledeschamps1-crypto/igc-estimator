@@ -143,7 +143,7 @@ export default function PipelinePanel({ onOpenEstimate }: PipelinePanelProps) {
       </section>
 
       {/* List */}
-      <section className="bg-white border border-igc-line rounded-lg">
+      <section className="bg-igc-surface border border-igc-line rounded-lg">
         {filtered.length === 0 ? (
           <EmptyState
             hasAny={savedEstimates.length > 0}
@@ -185,7 +185,7 @@ function DashCard({
   accent: string
 }) {
   return (
-    <div className="bg-white border border-igc-line rounded-lg p-4">
+    <div className="bg-igc-surface border border-igc-line rounded-lg p-4">
       <div className="text-[11px] uppercase tracking-wider text-igc-muted font-semibold">{label}</div>
       <div className={`text-2xl font-semibold mt-1 font-mono ${accent}`}>{value}</div>
       <div className="text-[11px] text-igc-muted mt-1">{sub}</div>
@@ -208,7 +208,7 @@ function FilterChip({
       className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
         active
           ? 'bg-igc-purple text-white border-igc-purple'
-          : 'bg-white text-igc-muted border-igc-line hover:border-igc-purple hover:text-igc-ink'
+          : 'bg-igc-surface text-igc-muted border-igc-line hover:border-igc-purple hover:text-igc-ink'
       }`}
     >
       {children}
