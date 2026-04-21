@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Wallpaper, Plus } from 'lucide-react'
 import { useEstimate } from '../estimate/EstimateContext'
 import { useCatalog } from '../catalog/CatalogContext'
+import SectionGuide from './SectionGuide'
 
 type Room = {
   id: string
@@ -26,12 +28,6 @@ const FALLBACK_WALLCOVERING = {
   patternWastePct: 0,
 }
 
-const DEFAULT_PREP_ITEMS: Array<Omit<PrepItem, 'id'>> = [
-  { label: 'Skim coat', sqFt: 0, ratePerSqFt: 2.5 },
-  { label: 'Prime walls', sqFt: 0, ratePerSqFt: 0.85 },
-  { label: 'Old wallpaper removal', sqFt: 0, ratePerSqFt: 2.25 },
-]
-
 function uid() {
   return Math.random().toString(36).slice(2, 9)
 }
@@ -46,15 +42,13 @@ export default function WallcoveringCalculator() {
   const { addQuote } = useEstimate()
   const { catalog } = useCatalog()
   const wallcoverings = catalog.wallcoverings
-  const [rooms, setRooms] = useState<Room[]>([
-    { id: uid(), label: 'Lobby', perimeterFt: 60, heightFt: 10, openingsSqFt: 40 },
-  ])
+  const [rooms, setRooms] = useState<Room[]>([])
   const [materialId, setMaterialId] = useState<string>(wallcoverings[0]?.id ?? '')
   const [extraWastePct, setExtraWastePct] = useState<number>(5)
   const [laborPerSqFt, setLaborPerSqFt] = useState<number>(5.5)
   const [markupPct, setMarkupPct] = useState<number>(35)
   const [taxPct, setTaxPct] = useState<number>(7)
-  const [prep, setPrep] = useState<PrepItem[]>(DEFAULT_PREP_ITEMS.map((p) => ({ ...p, id: uid() })))
+  const [prep, setPrep] = useState<PrepItem[]>([])
   const [clientSuppliesMaterial, setClientSuppliesMaterial] = useState<boolean>(false)
 
   useEffect(() => {
@@ -126,14 +120,36 @@ export default function WallcoveringCalculator() {
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8">
       {/* LEFT — inputs */}
       <div className="space-y-6">
+        <SectionGuide
+          id="wallcovering"
+          Icon={Wallpaper}
+          title="Wallcovering — how to quote"
+          steps={[
+            'Add a room: label it, enter the perimeter in feet (walk around, add up wall lengths), ceiling height, and total openings (doors + windows) in square feet.',
+            'Pick a wallcovering from your catalog. Toggle "Client supplies material" if you\'re quoting labor + prep only.',
+            'Add surface prep line items (skim coat, primer, wallpaper removal) only when they apply — with sq ft and $/sf.',
+            'Review pattern waste + labor + prep in the Quote Summary. Hit "+ Add to estimate" when the total looks right.',
+          ]}
+        />
+
         <section className="bg-igc-surface border border-igc-line rounded-lg p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted">Rooms / walls</h2>
-            <button onClick={addRoom} className="text-sm text-igc-accent hover:text-igc-accent-dark font-medium">
-              + Add room
+            <button onClick={addRoom} className="text-sm text-igc-accent hover:text-igc-accent-dark font-medium inline-flex items-center gap-1">
+              <Plus size={14} strokeWidth={2} /> Add room
             </button>
           </div>
 
+          {rooms.length === 0 ? (
+            <button
+              onClick={addRoom}
+              className="w-full border-2 border-dashed border-igc-line hover:border-igc-accent rounded-md py-8 text-sm text-igc-muted hover:text-igc-accent transition-colors flex flex-col items-center gap-2"
+            >
+              <Plus size={20} strokeWidth={1.75} />
+              <span>Add your first room</span>
+              <span className="text-[11px] text-igc-muted/80">Perimeter (ft) · height (ft) · openings (sf)</span>
+            </button>
+          ) : (
           <div className="space-y-3">
             <div className="grid grid-cols-[1fr_90px_90px_110px_40px] gap-2 text-xs font-medium text-igc-muted px-1">
               <div>Label</div>
@@ -184,10 +200,13 @@ export default function WallcoveringCalculator() {
               </div>
             ))}
           </div>
+          )}
 
-          <p className="text-xs text-igc-muted mt-3">
-            Openings = total sq ft of doors + windows subtracted from wall area (a 3×7 door = 21, a 4×5 window = 20).
-          </p>
+          {rooms.length > 0 && (
+            <p className="text-xs text-igc-muted mt-3">
+              Openings = total sq ft of doors + windows subtracted from wall area (a 3×7 door = 21, a 4×5 window = 20).
+            </p>
+          )}
         </section>
 
         <section className="bg-igc-surface border border-igc-line rounded-lg p-6">
@@ -284,11 +303,20 @@ export default function WallcoveringCalculator() {
         <section className="bg-igc-surface border border-igc-line rounded-lg p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted">Surface prep</h2>
-            <button onClick={addPrep} className="text-sm text-igc-accent hover:text-igc-accent-dark font-medium">
-              + Add prep line
+            <button onClick={addPrep} className="text-sm text-igc-accent hover:text-igc-accent-dark font-medium inline-flex items-center gap-1">
+              <Plus size={14} strokeWidth={2} /> Add prep line
             </button>
           </div>
 
+          {prep.length === 0 ? (
+            <div className="text-center py-6 text-sm text-igc-muted">
+              No prep needed? Leave this section empty.{' '}
+              <button onClick={addPrep} className="text-igc-accent hover:text-igc-accent-dark font-medium">
+                Add one
+              </button>{' '}
+              if the walls need skim coat, primer, or wallpaper removal.
+            </div>
+          ) : (
           <div className="space-y-3">
             <div className="grid grid-cols-[1fr_90px_110px_40px] gap-2 text-xs font-medium text-igc-muted px-1">
               <div>Line item</div>
@@ -333,10 +361,13 @@ export default function WallcoveringCalculator() {
               </div>
             ))}
           </div>
+          )}
 
-          <p className="text-xs text-igc-muted mt-3">
-            Prep should always be a separate line — never baked into hang rate. Leave sf at 0 to skip.
-          </p>
+          {prep.length > 0 && (
+            <p className="text-xs text-igc-muted mt-3">
+              Prep should always be a separate line — never baked into hang rate. Leave sf at 0 to skip.
+            </p>
+          )}
         </section>
       </div>
 
@@ -403,7 +434,8 @@ export default function WallcoveringCalculator() {
                   ],
                 })
               }}
-              className="mt-4 w-full px-4 py-2.5 bg-igc-accent hover:bg-igc-accent-dark text-white rounded-md text-sm font-medium transition-colors"
+              disabled={rooms.length === 0 || calc.total <= 0}
+              className="mt-4 w-full px-4 py-2.5 bg-igc-accent hover:bg-igc-accent-dark text-white rounded-md text-sm font-medium transition-colors disabled:bg-igc-line disabled:text-igc-muted disabled:cursor-not-allowed"
             >
               + Add to estimate
             </button>

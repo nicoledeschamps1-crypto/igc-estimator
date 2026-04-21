@@ -77,7 +77,7 @@ const STEPS: TourStep[] = [
   {
     Icon: Rocket,
     title: 'Ready to go',
-    body: 'Start on Window Film with the defaults — hit "+ Add to estimate", then switch to Estimate to see it land. Ask Nicole anything. Close this to begin.',
+    body: 'Start on Window Film, click "+ Add window group", and fill in the first row. When the total looks right, hit "+ Add to estimate" then switch to Estimate to see it land. Ask Nicole anything.',
   },
 ]
 

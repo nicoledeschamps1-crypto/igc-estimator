@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Blinds, Plus } from 'lucide-react'
 import { useEstimate } from '../estimate/EstimateContext'
 import { useCatalog } from '../catalog/CatalogContext'
+import SectionGuide from './SectionGuide'
 
 type Window = {
   id: string
@@ -44,9 +46,7 @@ export default function FilmCalculator() {
   const { addQuote } = useEstimate()
   const { catalog } = useCatalog()
   const films = catalog.films
-  const [windows, setWindows] = useState<Window[]>([
-    { id: uid(), label: 'Conference room', qty: 12, widthIn: 48, heightIn: 60 },
-  ])
+  const [windows, setWindows] = useState<Window[]>([])
   const [filmId, setFilmId] = useState<string>(films[0]?.id ?? '')
   const [wastePct, setWastePct] = useState<number>(10)
   const [laborPerSqFt, setLaborPerSqFt] = useState<number>(5.0)
@@ -124,17 +124,39 @@ export default function FilmCalculator() {
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8">
       {/* LEFT — inputs */}
       <div className="space-y-6">
+        <SectionGuide
+          id="film"
+          Icon={Blinds}
+          title="Window Film — how to quote"
+          steps={[
+            'Click + Add window group and enter a label (e.g. "Conference room"), quantity, and the width × height in inches.',
+            'Pick a film type from your catalog. Adjust waste factor, labor rate, and markup if this job is different from the norm.',
+            'Check any complexity boxes that apply (arched glass, above 10ft, exterior, etc.) — they bump labor automatically.',
+            'Watch the Quote Summary total on the right. When it looks right, hit "+ Add to estimate".',
+          ]}
+        />
+
         <section className="bg-igc-surface border border-igc-line rounded-lg p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted">Windows</h2>
             <button
               onClick={addWindow}
-              className="text-sm text-igc-accent hover:text-igc-accent-dark font-medium"
+              className="text-sm text-igc-accent hover:text-igc-accent-dark font-medium inline-flex items-center gap-1"
             >
-              + Add window group
+              <Plus size={14} strokeWidth={2} /> Add window group
             </button>
           </div>
 
+          {windows.length === 0 ? (
+            <button
+              onClick={addWindow}
+              className="w-full border-2 border-dashed border-igc-line hover:border-igc-accent rounded-md py-8 text-sm text-igc-muted hover:text-igc-accent transition-colors flex flex-col items-center gap-2"
+            >
+              <Plus size={20} strokeWidth={1.75} />
+              <span>Add your first window group</span>
+              <span className="text-[11px] text-igc-muted/80">Quantity · width × height in inches</span>
+            </button>
+          ) : (
           <div className="space-y-3">
             <div className="grid grid-cols-[1fr_80px_90px_90px_40px] gap-2 text-xs font-medium text-igc-muted px-1">
               <div>Label</div>
@@ -184,6 +206,7 @@ export default function FilmCalculator() {
               </div>
             ))}
           </div>
+          )}
         </section>
 
         <section className="bg-igc-surface border border-igc-line rounded-lg p-6">
@@ -359,7 +382,8 @@ export default function FilmCalculator() {
                   ],
                 })
               }}
-              className="mt-4 w-full px-4 py-2.5 bg-igc-accent hover:bg-igc-accent-dark text-white rounded-md text-sm font-medium transition-colors"
+              disabled={windows.length === 0 || calc.total <= 0}
+              className="mt-4 w-full px-4 py-2.5 bg-igc-accent hover:bg-igc-accent-dark text-white rounded-md text-sm font-medium transition-colors disabled:bg-igc-line disabled:text-igc-muted disabled:cursor-not-allowed"
             >
               + Add to estimate
             </button>

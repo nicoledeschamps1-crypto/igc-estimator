@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Palette, Plus } from 'lucide-react'
 import { useEstimate } from '../estimate/EstimateContext'
 import { useCatalog } from '../catalog/CatalogContext'
+import SectionGuide from './SectionGuide'
 
 type Wall = {
   id: string
@@ -41,12 +43,10 @@ export default function MuralCalculator() {
   const { addQuote } = useEstimate()
   const { catalog } = useCatalog()
   const muralStyles = catalog.muralStyles
-  const [walls, setWalls] = useState<Wall[]>([
-    { id: uid(), label: 'Feature wall', widthFt: 20, heightFt: 12 },
-  ])
+  const [walls, setWalls] = useState<Wall[]>([])
   const [styleId, setStyleId] = useState<string>(muralStyles[1]?.id ?? muralStyles[0]?.id ?? '')
-  const [access, setAccess] = useState<AccessKey>('ladder')
-  const [designFee, setDesignFee] = useState<number>(1500)
+  const [access, setAccess] = useState<AccessKey>('under10')
+  const [designFee, setDesignFee] = useState<number>(0)
   const [markupPct, setMarkupPct] = useState<number>(35)
   const [taxPct, setTaxPct] = useState<number>(7)
   const [projectType, setProjectType] = useState<ProjectType>('residential')
@@ -104,14 +104,36 @@ export default function MuralCalculator() {
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8">
       {/* LEFT — inputs */}
       <div className="space-y-6">
+        <SectionGuide
+          id="mural"
+          Icon={Palette}
+          title="Mural — how to quote"
+          steps={[
+            'Click + Add wall, label it (e.g. "Feature wall"), and enter the width × height in feet.',
+            'Pick a style tier — the flat / hand-painted / detailed / signature scale drives both material and labor $/sf.',
+            'Set access: under 10 ft uses no multiplier; ladder adds 20%, lift/scaffold adds 50%.',
+            'Add a design fee if you\'re billing for sketches separately, then pick residential (50/50) or commercial (33/33/33) for the payment schedule.',
+          ]}
+        />
+
         <section className="bg-igc-surface border border-igc-line rounded-lg p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-igc-muted">Walls</h2>
-            <button onClick={addWall} className="text-sm text-igc-accent hover:text-igc-accent-dark font-medium">
-              + Add wall
+            <button onClick={addWall} className="text-sm text-igc-accent hover:text-igc-accent-dark font-medium inline-flex items-center gap-1">
+              <Plus size={14} strokeWidth={2} /> Add wall
             </button>
           </div>
 
+          {walls.length === 0 ? (
+            <button
+              onClick={addWall}
+              className="w-full border-2 border-dashed border-igc-line hover:border-igc-accent rounded-md py-8 text-sm text-igc-muted hover:text-igc-accent transition-colors flex flex-col items-center gap-2"
+            >
+              <Plus size={20} strokeWidth={1.75} />
+              <span>Add your first wall</span>
+              <span className="text-[11px] text-igc-muted/80">Width × height in feet</span>
+            </button>
+          ) : (
           <div className="space-y-3">
             <div className="grid grid-cols-[1fr_100px_100px_40px] gap-2 text-xs font-medium text-igc-muted px-1">
               <div>Label</div>
@@ -155,6 +177,7 @@ export default function MuralCalculator() {
               </div>
             ))}
           </div>
+          )}
         </section>
 
         <section className="bg-igc-surface border border-igc-line rounded-lg p-6">
@@ -340,7 +363,8 @@ export default function MuralCalculator() {
                   ],
                 })
               }}
-              className="mt-4 w-full px-4 py-2.5 bg-igc-accent hover:bg-igc-accent-dark text-white rounded-md text-sm font-medium transition-colors"
+              disabled={walls.length === 0 || calc.total <= 0}
+              className="mt-4 w-full px-4 py-2.5 bg-igc-accent hover:bg-igc-accent-dark text-white rounded-md text-sm font-medium transition-colors disabled:bg-igc-line disabled:text-igc-muted disabled:cursor-not-allowed"
             >
               + Add to estimate
             </button>
