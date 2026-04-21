@@ -35,16 +35,16 @@ export default function SectionGuide({ id, Icon = Lightbulb, title, steps }: Pro
   if (dismissed) return null
 
   return (
-    <section className="bg-igc-accent-light border border-igc-accent/30 rounded-lg p-4 flex items-start gap-3">
-      <div className="flex-shrink-0 w-9 h-9 rounded-md bg-igc-accent text-white flex items-center justify-center">
-        <Icon size={18} strokeWidth={1.75} />
+    <section className="bg-igc-accent-light border border-igc-accent/30 rounded-lg p-5 flex items-start gap-4">
+      <div className="flex-shrink-0 w-11 h-11 rounded-md bg-igc-accent text-white flex items-center justify-center">
+        <Icon size={22} strokeWidth={1.75} />
       </div>
       <div className="flex-1 min-w-0">
-        <div className="text-sm font-semibold text-igc-ink mb-1">{title}</div>
-        <ol className="text-xs text-igc-ink/85 space-y-0.5 list-none">
+        <div className="text-base font-semibold text-igc-ink mb-2">{title}</div>
+        <ol className="text-sm text-igc-ink/85 space-y-1.5 list-none leading-relaxed">
           {steps.map((s, i) => (
             <li key={i} className="flex items-start gap-2">
-              <span className="text-igc-accent font-semibold flex-shrink-0">{i + 1}.</span>
+              <span className="text-igc-accent dark:text-blue-300 font-semibold flex-shrink-0 tabular-nums">{i + 1}.</span>
               <span>{s}</span>
             </li>
           ))}
@@ -54,8 +54,9 @@ export default function SectionGuide({ id, Icon = Lightbulb, title, steps }: Pro
         onClick={() => setDismissed(true)}
         className="flex-shrink-0 text-igc-muted hover:text-igc-ink"
         title="Hide this guide"
+        aria-label="Hide guide"
       >
-        <X size={16} strokeWidth={1.75} />
+        <X size={18} strokeWidth={1.75} />
       </button>
     </section>
   )
