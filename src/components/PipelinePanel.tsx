@@ -81,10 +81,7 @@ export default function PipelinePanel({ onOpenEstimate }: PipelinePanelProps) {
 
   function handleDuplicate(id: string) {
     const newId = duplicateEstimate(id)
-    if (newId) {
-      loadEstimate(newId)
-      onOpenEstimate()
-    }
+    if (newId) onOpenEstimate()
   }
 
   function handleNew() {

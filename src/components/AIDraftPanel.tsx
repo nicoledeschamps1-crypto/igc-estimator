@@ -57,8 +57,18 @@ function useWorkerUrl() {
       // ignore
     }
   }, [override])
-  const activeUrl = (envUrl || override).replace(/\/$/, '')
+  // Manual override wins so operators can replace a stale / rotated env URL
+  // without a rebuild.
+  const activeUrl = (override || envUrl).replace(/\/$/, '')
   return { activeUrl, envUrl, override, setOverride }
+}
+
+function safeHost(url: string): string | null {
+  try {
+    return new URL(url).host
+  } catch {
+    return null
+  }
 }
 
 export default function AIDraftPanel() {
@@ -72,6 +82,10 @@ export default function AIDraftPanel() {
   const [error, setError] = useState<string | null>(null)
   const [dismissed, setDismissed] = useState<Set<number>>(new Set())
   const [accepted, setAccepted] = useState<Set<number>>(new Set())
+  const [settingsOpen, setSettingsOpen] = useState(false)
+  const activeHost = safeHost(activeUrl)
+  const urlInvalid = activeUrl.length > 0 && activeHost === null
+  const showSetup = !activeUrl || urlInvalid || settingsOpen
 
   const catalogPayload = useMemo(
     () => ({
@@ -165,8 +179,19 @@ export default function AIDraftPanel() {
         </div>
       </section>
 
-      {/* Setup card — shown when worker URL is missing */}
-      {!activeUrl && <SetupCard override={override} setOverride={setOverride} envUrl={envUrl} />}
+      {/* Setup card — shown when worker URL is missing, invalid, or user clicks "Change worker URL" */}
+      {showSetup && (
+        <SetupCard
+          override={override}
+          setOverride={(v) => {
+            setOverride(v)
+            setSettingsOpen(false)
+          }}
+          envUrl={envUrl}
+          urlInvalid={urlInvalid}
+          onClose={activeUrl && !urlInvalid ? () => setSettingsOpen(false) : undefined}
+        />
+      )}
 
       {/* Scope input */}
       <section className="bg-igc-surface border border-igc-line rounded-lg p-6 space-y-4">
@@ -189,17 +214,27 @@ export default function AIDraftPanel() {
           />
           <div className="text-[11px] text-igc-muted mt-1">{scope.length.toLocaleString()} characters</div>
         </div>
-        <div className="flex items-center justify-between">
-          <div className="text-xs text-igc-muted">
-            {activeUrl ? (
-              <>Ready · worker at {new URL(activeUrl).host}</>
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <div className="text-xs text-igc-muted flex items-center gap-2 flex-wrap">
+            {activeHost ? (
+              <>
+                <span>Ready · worker at {activeHost}</span>
+                <button
+                  onClick={() => setSettingsOpen((s) => !s)}
+                  className="text-igc-purple hover:text-igc-purple-dark underline"
+                >
+                  {settingsOpen ? 'Hide settings' : 'Change URL'}
+                </button>
+              </>
+            ) : urlInvalid ? (
+              <>⚠ Worker URL looks malformed — fix it in the setup card.</>
             ) : (
               <>⚠ Worker URL not set — see setup card above.</>
             )}
           </div>
           <button
             onClick={runDraft}
-            disabled={loading || scope.trim().length < 10 || !activeUrl}
+            disabled={loading || scope.trim().length < 10 || !activeHost}
             className="px-5 py-2 bg-igc-purple hover:bg-igc-purple-dark text-white rounded-md text-sm font-medium transition-colors disabled:bg-igc-line disabled:text-igc-muted disabled:cursor-not-allowed"
           >
             {loading ? 'Drafting…' : 'Draft estimate'}
@@ -340,34 +375,63 @@ function SetupCard({
   override,
   setOverride,
   envUrl,
+  urlInvalid,
+  onClose,
 }: {
   override: string
   setOverride: (s: string) => void
   envUrl: string
+  urlInvalid?: boolean
+  onClose?: () => void
 }) {
   const [draft, setDraft] = useState(override)
+  function save() {
+    const trimmed = draft.trim()
+    if (!trimmed) return
+    try {
+      // Validate before persisting so a typo does not break the panel.
+      new URL(trimmed)
+    } catch {
+      setOverride(trimmed) // keep user input so they can fix it
+      return
+    }
+    setOverride(trimmed)
+  }
+  const heading = urlInvalid ? 'Fix the worker URL' : 'Setup required'
   return (
-    <section className="bg-amber-50 border border-amber-200 rounded-lg p-6 space-y-4">
-      <div>
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-amber-900 mb-1">Setup required</h2>
-        <p className="text-xs text-amber-900 leading-relaxed">
-          M4 uses a Cloudflare Worker that holds the Anthropic API key server-side. Follow{' '}
-          <code className="bg-amber-100 px-1 py-0.5 rounded">worker/README.md</code> to deploy (~5 min, free tier), then
-          paste the Worker URL below. Stored in localStorage on this browser.
-        </p>
+    <section className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 rounded-lg p-6 space-y-4">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-amber-900 dark:text-amber-200 mb-1">
+            {heading}
+          </h2>
+          <p className="text-xs text-amber-900 dark:text-amber-200/90 leading-relaxed">
+            M4 uses a Cloudflare Worker that holds the Anthropic API key server-side. Follow{' '}
+            <code className="bg-amber-100 dark:bg-amber-900/60 px-1 py-0.5 rounded">worker/README.md</code> to deploy
+            (~5 min, free tier), then paste the Worker URL below. Stored in localStorage on this browser.
+          </p>
+        </div>
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="text-xs text-amber-900 dark:text-amber-200 hover:underline flex-shrink-0"
+          >
+            Close
+          </button>
+        )}
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 flex-wrap">
         <input
           type="url"
           placeholder="https://igc-estimator-worker.you.workers.dev"
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
-          className="flex-1 px-3 py-2 border border-amber-300 bg-igc-surface rounded-md text-sm focus:outline-none focus:border-amber-500"
+          className="flex-1 min-w-[12rem] px-3 py-2 border border-amber-300 dark:border-amber-800/60 bg-igc-surface rounded-md text-sm focus:outline-none focus:border-amber-500"
         />
         <button
-          onClick={() => setOverride(draft.trim())}
+          onClick={save}
           disabled={!draft.trim()}
-          className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-md text-sm font-medium disabled:bg-amber-200 disabled:cursor-not-allowed"
+          className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-md text-sm font-medium disabled:bg-amber-200 dark:disabled:bg-amber-900/40 disabled:cursor-not-allowed"
         >
           Save URL
         </button>
@@ -377,15 +441,15 @@ function SetupCard({
               setOverride('')
               setDraft('')
             }}
-            className="px-3 py-2 text-xs text-amber-900 hover:text-amber-700 border border-amber-300 rounded-md"
+            className="px-3 py-2 text-xs text-amber-900 dark:text-amber-200 hover:text-amber-700 border border-amber-300 dark:border-amber-800/60 rounded-md"
           >
             Clear
           </button>
         )}
       </div>
       {envUrl && (
-        <div className="text-[11px] text-amber-900/80">
-          (Build-time <code>VITE_WORKER_URL</code> is set to <code>{envUrl}</code> — any value above overrides it.)
+        <div className="text-[11px] text-amber-900/80 dark:text-amber-200/70">
+          (Build-time <code>VITE_WORKER_URL</code> is set to <code>{envUrl}</code> — a value here overrides it.)
         </div>
       )}
     </section>

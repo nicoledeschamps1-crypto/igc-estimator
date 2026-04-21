@@ -262,6 +262,11 @@ export function EstimateProvider({ children }: { children: ReactNode }) {
       updatedAt: now,
     }
     setSavedEstimates((list) => [copy, ...list])
+    // Load the copy into the workspace in the same render — don't rely on
+    // a subsequent loadEstimate(newId) call reading the yet-to-be-applied state.
+    setQuotes(copy.quotes)
+    setClientState(copy.client)
+    setCurrentEstimateId(newId)
     return newId
   }
 
