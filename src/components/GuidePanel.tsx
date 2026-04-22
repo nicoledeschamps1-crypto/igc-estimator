@@ -64,15 +64,15 @@ const MILESTONES: Milestone[] = [
   {
     id: 'M4',
     label: 'M4 · AI draft from scope text',
-    status: 'current',
-    summary: 'Paste a scope · Claude drafts line items · source-cited · Worker deploy pending',
+    status: 'done',
+    summary: 'Paste a scope · Claude drafts line items · source-cited · live on Cloudflare',
     items: [
-      'AI Draft tab shipped — paste scope, Claude drafts line items automatically',
+      'AI Draft tab — paste scope, Claude drafts line items automatically',
       'Every AI suggestion cites its source quote from the scope',
       '⚠ Low / · Medium / ✓ High confidence chips on every item',
       '"Accept & add to estimate" button feeds the workspace',
-      'Cloudflare Worker (worker/) holds the API key server-side — deploy with `wrangler deploy`',
-      '⏳ Nicole to deploy Worker + paste URL into setup card before first use',
+      'Cloudflare Worker (worker/) holds the API key server-side',
+      'Deployed to igc-estimator-worker.workers.dev',
     ],
   },
   {
