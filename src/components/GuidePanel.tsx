@@ -78,12 +78,15 @@ const MILESTONES: Milestone[] = [
   {
     id: 'M5',
     label: 'M5 · Bluebeam integration',
-    status: 'planned',
+    status: 'current',
     summary: 'Real measurements in, structured estimate out',
     items: [
-      'Import Bluebeam Revu CSV markup export',
-      'IGC Custom Tool Chest: pre-labeled measurement tools auto-route to trade calcs',
-      'Each line item links back to the Bluebeam markup ID',
+      'Tool Chest editor — map Bluebeam tool names → trade calculator + catalog item',
+      'Bluebeam CSV import — drag-and-drop, parses the standard Markups List export',
+      'Auto-route each markup row into a draft line item using your Tool Chest mappings',
+      'Preview screen — pick which rows to add, quick-map any unmatched tools inline',
+      'Each line item carries its Bluebeam markup ID for traceback (M6 setup)',
+      '⏳ Eric to share his real Tool Chest names + a sample CSV export to lock in defaults',
     ],
   },
   {

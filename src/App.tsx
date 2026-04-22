@@ -6,23 +6,38 @@ import MuralCalculator from './components/MuralCalculator'
 import EstimatePanel from './components/EstimatePanel'
 import PipelinePanel from './components/PipelinePanel'
 import AIDraftPanel from './components/AIDraftPanel'
+import BluebeamImport from './components/BluebeamImport'
 import CatalogEditor from './components/CatalogEditor'
+import ToolChestEditor from './components/ToolChestEditor'
 import GuidePanel from './components/GuidePanel'
 import OnboardingTour, { hasBeenOnboarded } from './components/OnboardingTour'
 import { EstimateProvider, useEstimate } from './estimate/EstimateContext'
 import { CatalogProvider } from './catalog/CatalogContext'
+import { ToolChestProvider } from './toolchest/ToolChestContext'
 import { ThemeProvider, useTheme } from './theme/ThemeContext'
 
-type Tab = 'film' | 'wallcovering' | 'mural' | 'ai' | 'estimate' | 'pipeline' | 'catalog' | 'guide'
+type Tab =
+  | 'film'
+  | 'wallcovering'
+  | 'mural'
+  | 'ai'
+  | 'bluebeam'
+  | 'estimate'
+  | 'pipeline'
+  | 'catalog'
+  | 'toolchest'
+  | 'guide'
 
 const TABS: Array<{ id: Tab; label: string; sublabel: string; group: 'trades' | 'ai' | 'pipeline' | 'settings' }> = [
   { id: 'film', label: 'Window Film', sublabel: 'Privacy · solar · security · decorative', group: 'trades' },
   { id: 'wallcovering', label: 'Wallcovering', sublabel: 'Commercial vinyl · patterned · custom', group: 'trades' },
   { id: 'mural', label: 'Mural', sublabel: 'Hand-painted · branded · signature', group: 'trades' },
   { id: 'ai', label: 'AI Draft', sublabel: 'Paste a scope · Claude drafts line items', group: 'ai' },
+  { id: 'bluebeam', label: 'Bluebeam', sublabel: 'Import CSV markups · auto-route to trades', group: 'ai' },
   { id: 'estimate', label: 'Estimate', sublabel: 'Combined proposal · PDF export', group: 'trades' },
   { id: 'pipeline', label: 'Pipeline', sublabel: 'Saved estimates · revenue forecast', group: 'pipeline' },
   { id: 'catalog', label: 'Catalog', sublabel: 'Edit default rates + products', group: 'settings' },
+  { id: 'toolchest', label: 'Tool Chest', sublabel: 'Map Bluebeam tools → trade calculators', group: 'settings' },
   { id: 'guide', label: 'Guide', sublabel: 'How it works · roadmap', group: 'settings' },
 ]
 
@@ -30,9 +45,11 @@ export default function App() {
   return (
     <ThemeProvider>
       <CatalogProvider>
-        <EstimateProvider>
-          <AppShell />
-        </EstimateProvider>
+        <ToolChestProvider>
+          <EstimateProvider>
+            <AppShell />
+          </EstimateProvider>
+        </ToolChestProvider>
       </CatalogProvider>
     </ThemeProvider>
   )
@@ -116,6 +133,9 @@ function AppShell() {
         <div hidden={tab !== 'ai'}>
           <AIDraftPanel />
         </div>
+        <div hidden={tab !== 'bluebeam'}>
+          <BluebeamImport onOpenToolChest={() => setTab('toolchest')} />
+        </div>
         <div hidden={tab !== 'estimate'}>
           <EstimatePanel />
         </div>
@@ -124,6 +144,9 @@ function AppShell() {
         </div>
         <div hidden={tab !== 'catalog'}>
           <CatalogEditor />
+        </div>
+        <div hidden={tab !== 'toolchest'}>
+          <ToolChestEditor />
         </div>
         <div hidden={tab !== 'guide'}>
           <GuidePanel />

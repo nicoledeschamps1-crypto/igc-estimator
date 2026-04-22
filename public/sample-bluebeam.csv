@@ -1,0 +1,11 @@
+Subject,Page Label,Type,Layer,Color,Comments,Length,Area,Width,Height
+Solar Film 3M Crystalline,A-101 Lobby,Rectangle,WindowFilm,#1E90FF,Large lobby window south,,90.0 sq ft,15 ft,6 ft
+Solar Film 3M Crystalline,A-101 Lobby,Rectangle,WindowFilm,#1E90FF,Sidelite east,,18.0 sq ft,3 ft,6 ft
+Privacy Film Frosted,A-102 Conference,Rectangle,WindowFilm,#9370DB,Glass partition full height,,72.5 sq ft,12 ft,6 ft
+Privacy Film Frosted,A-102 Conference,Rectangle,WindowFilm,#9370DB,Glass door,,21.0 sq ft,3.5 ft,6 ft
+Vinyl Wallcovering Type II,A-103 Corridor,Polygon,Wallcovering,#8B4513,North corridor,,310.0 sq ft,,
+Vinyl Wallcovering Type II,A-104 Reception,Polygon,Wallcovering,#8B4513,Reception accent wall,,168.0 sq ft,,
+Wallpaper Floral Pattern,A-105 Powder Room,Polygon,Wallcovering,#FF69B4,Patterned wallpaper,,82.5 sq ft,,
+Hand-Painted Mural,A-201 Cafe Wall,Polygon,Mural,#FF8C00,Botanical scene cafe back wall,,144.0 sq ft,12 ft,12 ft
+Hand-Painted Mural,A-202 Lobby Mural,Polygon,Mural,#FF8C00,Branded signature piece,,220.0 sq ft,20 ft,11 ft
+Custom Tool XYZ,A-203 Misc,Length,Misc,#666666,Unmapped — dad's custom tool,42.5 ft,,,
