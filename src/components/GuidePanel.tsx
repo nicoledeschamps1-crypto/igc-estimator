@@ -9,6 +9,9 @@ import {
   Map,
   Receipt,
   HelpCircle,
+  Wrench,
+  FileSpreadsheet,
+  DollarSign,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -288,23 +291,84 @@ export default function GuidePanel() {
         </div>
       </section>
 
-      {/* Needed from dad */}
+      {/* Questions for Papi */}
       <section className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 rounded-lg p-6">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-amber-900 dark:text-amber-200 mb-3">Needed from dad</h2>
-        <ul className="space-y-2 text-sm text-amber-900 dark:text-amber-200">
-          <li className="flex items-start gap-2">
-            <FileText size={16} className="mt-0.5 flex-shrink-0" strokeWidth={1.75} />
-            <span>2–3 recent sample quotes (PDF or Word) — so the tool matches his format</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <Receipt size={16} className="mt-0.5 flex-shrink-0" strokeWidth={1.75} />
-            <span>Actual rate card — materials + labor by trade, so the catalog defaults are his real numbers</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <HelpCircle size={16} className="mt-0.5 flex-shrink-0" strokeWidth={1.75} />
-            <span>Residential vs commercial mix, standard markup %, deposit preferences</span>
-          </li>
-        </ul>
+        <div className="flex items-center gap-2 mb-1">
+          <HelpCircle size={16} className="text-amber-900 dark:text-amber-200" strokeWidth={1.75} />
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-amber-900 dark:text-amber-200">
+            Questions for Papi
+          </h2>
+        </div>
+        <p className="text-xs text-amber-900/80 dark:text-amber-200/80 mb-5">
+          Answers to these let Nicole swap placeholder numbers for Eric's real values, so every quote
+          comes out matching how he'd price it by hand.
+        </p>
+
+        <div className="space-y-5">
+          <QuestionGroup
+            Icon={FileText}
+            title="Sample quotes"
+            questions={[
+              'Can you send 2–3 recent quotes you sent to clients (PDF or Word)? Any trade.',
+              'What line items and sections do you always include? (e.g. materials, labor, access fee, deposit schedule)',
+              'How do you format totals — itemized with subtotals, or one bottom-line number?',
+            ]}
+          />
+
+          <QuestionGroup
+            Icon={DollarSign}
+            title="Rates & markup"
+            questions={[
+              'What are your actual per-square-foot material costs for each film / wallcovering / mural tier?',
+              'What do you charge per square foot for labor — and does it change for residential vs commercial?',
+              'What markup % do you apply on materials? Labor? (We currently use 35% on everything.)',
+              'What sales tax % should we default to? (We have 7% FL placeholder.)',
+              'When do you charge a design fee on murals — always, only on custom, or never?',
+            ]}
+          />
+
+          <QuestionGroup
+            Icon={Receipt}
+            title="Deposits & terms"
+            questions={[
+              'Deposit schedule for residential? (We default 50/50.)',
+              'Deposit schedule for commercial? (We default 33/33/33.)',
+              'Do you add an access fee for ladders / lifts / scaffolding? If so, how much?',
+              'How long are your estimates valid? (We say 30 days in the PDF footer.)',
+            ]}
+          />
+
+          <QuestionGroup
+            Icon={Wrench}
+            title="Bluebeam Tool Chest"
+            questions={[
+              'What are the exact Subject names of the tools you use in Bluebeam? (e.g. "Solar Film 3M Crystalline", "Vinyl Wallcovering Type II")',
+              'Which of your tools map to Window Film, Wallcovering, Mural, or something else?',
+              'Do you have a preferred default waste % per tool? (10%, 15%, etc.)',
+              'Do you already have a shared Tool Chest .btx file, or is each person using their own?',
+            ]}
+          />
+
+          <QuestionGroup
+            Icon={FileSpreadsheet}
+            title="Sample Bluebeam export"
+            questions={[
+              'Can you send the Markups List CSV export from one recent project? (Markups List → Save → CSV)',
+              'What page/sheet label convention do you use? (A-101, Level 1, Floor Plan, etc.)',
+              'Do you measure in sq ft, sq in, sq meters — and is the Bluebeam scale always set before measuring?',
+            ]}
+          />
+
+          <QuestionGroup
+            Icon={HelpCircle}
+            title="Project mix"
+            questions={[
+              'Roughly what split of your work is residential vs commercial?',
+              'Which trade is the bulk of your revenue — film, wallcovering, or murals?',
+              'Are there other trades we should add calculators for? (epoxy, decals, signage, etc.)',
+            ]}
+          />
+        </div>
       </section>
 
       {/* Meta */}
@@ -314,6 +378,26 @@ export default function GuidePanel() {
         <div><strong className="text-igc-ink">Repo:</strong> github.com/nicoledeschamps1-crypto/igc-estimator</div>
         <div><strong className="text-igc-ink">Reference:</strong> Beam (trybeam.com) — with IGC's actual trade calculators + Bluebeam integration</div>
       </section>
+    </div>
+  )
+}
+
+function QuestionGroup({ Icon, title, questions }: { Icon: LucideIcon; title: string; questions: string[] }) {
+  return (
+    <div>
+      <div className="flex items-center gap-2 mb-2">
+        <Icon size={14} className="text-amber-900 dark:text-amber-200" strokeWidth={1.75} />
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-amber-900 dark:text-amber-200">
+          {title}
+        </h3>
+      </div>
+      <ul className="space-y-1.5 pl-6 text-sm text-amber-900 dark:text-amber-200">
+        {questions.map((q, idx) => (
+          <li key={idx} className="list-disc marker:text-amber-900/50 dark:marker:text-amber-200/50">
+            {q}
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }
